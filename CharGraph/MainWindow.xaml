@@ -3,10 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CharGraph"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:views="clr-namespace:CharGraph.Views"
+        xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid x:Name="Main" Margin="0 0 70 0">
+            <ContentControl Content="{Binding Navigator.CurrentViewModel}"
+                            Margin="0,0,0,0"
+                            FontSize="20"
+                            HorizontalAlignment="Stretch"/>
+        </Grid>
+        <Grid x:Name="Options" Width="60" HorizontalAlignment="Right">
+            <StackPanel Margin="5">
+                <Button Visibility="{Binding IsSettingsButtonVisible}"
+                        Command="{Binding SwitchViewCommand}">
+                    <materialDesign:PackIcon Kind="Settings" />
+                </Button>
+                <Button Visibility="{Binding IsMainButtonVisible}"
+                        Command="{Binding SwitchViewCommand}">
+                    Main
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
