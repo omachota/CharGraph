@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Input;
 using CharGraph.ViewModels;
 
@@ -6,9 +7,11 @@ namespace CharGraph.Infrastructure.SwitchView
 {
 	public class UpdateCurrentViewModelCommand : ICommand
 	{
-		public event EventHandler CanExecuteChanged = null!;
-
+		private bool _showArduinoDetectedDialog = true;
+		private readonly CancellationTokenSource _cts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
 		private readonly INavigator _navigator;
+
+		public event EventHandler CanExecuteChanged;
 
 		public UpdateCurrentViewModelCommand(INavigator navigator)
 		{
@@ -26,14 +29,33 @@ namespace CharGraph.Infrastructure.SwitchView
 
 			if (_navigator.CurrentWindowType != viewType)
 			{
-				_navigator.CurrentViewModel = viewType switch
+				switch (viewType)
 				{
-					ViewType.Main => new GraphViewModel(),
-					ViewType.Settings => new SettingsViewModel(),
-					_ => throw new ArgumentOutOfRangeException()
-				};
+					case ViewType.Main:
+						_navigator.CurrentViewModel = new GraphViewModel();
+						_cts.Cancel();
+						break;
+					case ViewType.Settings:
+						Settings();
+						break;
+					default:
+						throw new ArgumentOutOfRangeException($"{nameof(Execute)}	{nameof(parameter)}");
+				}
+
 				_navigator.CurrentWindowType = viewType;
 			}
+		}
+
+		private void Settings()
+		{
+			var settingsViewModel = new SettingsViewModel(_navigator);
+			_navigator.CurrentViewModel = settingsViewModel;
+			if (_showArduinoDetectedDialog)
+			{
+				_showArduinoDetectedDialog = false;
+				settingsViewModel.Initialize(_cts);
+			}
+
 		}
 	}
 }

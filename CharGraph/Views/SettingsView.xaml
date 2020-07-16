@@ -3,12 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:CharGraph.Views"
              xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel,IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
+
     <Grid>
-        <TextBlock Text="{Binding Test}"></TextBlock>
+        <TextBlock Text="{Binding Test}" />
+        <materialDesign:DialogHost HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   IsOpen="{Binding IsArduinoDialogOpen}"
+                                   DialogContent="{Binding ArduinoDialogObject}"
+                                   CloseOnClickAway="True"
+                                   Margin="70 0 0 0"
+                                   OverlayBackground="{DynamicResource PrimaryHueDarkBrush}">
+            <Button HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding OpenArduinoDialogCommand}">RUN</Button>
+        </materialDesign:DialogHost>
+        <ComboBox ItemsSource="{Binding ComPorts}"
+                  SelectedItem="{Binding SelectedItem}"
+                  Margin="5,30,400,0"
+                  VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

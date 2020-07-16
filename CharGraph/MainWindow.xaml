@@ -4,29 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:views="clr-namespace:CharGraph.Views"
         xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Grid x:Name="Main" Margin="0 0 70 0">
+        <Grid Margin="0 0 70 0">
             <ContentControl Content="{Binding Navigator.CurrentViewModel}"
-                            Margin="0,0,0,0"
+                            Margin="5,5,0,5"
                             FontSize="20"
                             HorizontalAlignment="Stretch"/>
         </Grid>
-        <Grid x:Name="Options" Width="60" HorizontalAlignment="Right">
+        <Grid Width="60" HorizontalAlignment="Right">
             <StackPanel Margin="5">
                 <Button Visibility="{Binding IsSettingsButtonVisible}"
-                        Command="{Binding SwitchViewCommand}">
+                        Command="{Binding SwitchViewCommand}"
+                        ToolTip="Přejít do nastavení">
                     <materialDesign:PackIcon Kind="Settings" />
                 </Button>
                 <Button Visibility="{Binding IsMainButtonVisible}"
-                        Command="{Binding SwitchViewCommand}">
-                    Main
+                        Command="{Binding SwitchViewCommand}"
+                        ToolTip="Přejít do hlavního okna">
+                    <materialDesign:PackIcon Kind="Home" />
                 </Button>
             </StackPanel>
         </Grid>
+        <materialDesign:Snackbar Message="{Binding ErrorMessage}" IsActive="{Binding IsErrorMessageVisible}" />
     </Grid>
 </Window>
