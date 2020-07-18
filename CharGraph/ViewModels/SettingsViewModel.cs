@@ -17,7 +17,7 @@ namespace CharGraph.ViewModels
 		private bool _isArduinoDialogOpen;
 		private object _arduinoDialogObject;
 		private List<string> _comPorts;
-		private string selectedItem;
+		private string _selectedItem;
 		private Arduino Arduino { get; set; }
 
 		public ICommand OpenArduinoDialogCommand { get; }
@@ -61,8 +61,8 @@ namespace CharGraph.ViewModels
 
 		public string SelectedItem
 		{
-			get => selectedItem;
-			set => SetAndRaise(ref selectedItem, value);
+			get => _selectedItem;
+			set => SetAndRaise(ref _selectedItem, value);
 		}
 
 		private void OpenArduinoDialog()
