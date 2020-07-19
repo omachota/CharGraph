@@ -71,6 +71,7 @@
     <Compile Include="Infrastructure\SwitchView\INavigator.cs" />
     <Compile Include="Infrastructure\SwitchView\Navigator.cs" />
     <Compile Include="Infrastructure\SwitchView\UpdateCurrentViewModelCommand.cs" />
+    <Compile Include="Models\ArduData.cs" />
     <Compile Include="Models\Arduino.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GraphViewModel.cs" />

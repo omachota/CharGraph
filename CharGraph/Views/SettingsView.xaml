@@ -22,7 +22,7 @@
                     Command="{Binding OpenArduinoDialogCommand}">RUN</Button>
         </materialDesign:DialogHost>
         <ComboBox ItemsSource="{Binding ComPorts}"
-                  SelectedItem="{Binding SelectedItem}"
+                  SelectedItem="{Binding SelectedPort}"
                   Margin="5,30,400,0"
                   VerticalAlignment="Top"/>
     </Grid>

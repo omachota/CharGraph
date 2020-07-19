@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CharGraph.Infrastructure;
@@ -20,24 +21,30 @@ namespace CharGraph.ViewModels
 		{
 			Navigator = new Navigator();
 			Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Settings);
+			Navigator.OnCurrentWindowTypeChanged += NavigatorOnOnCurrentWindowTypeChanged;
 			SwitchViewCommand = new Command(() =>
 			{
-				if (Navigator.CurrentWindowType == ViewType.Main)
-				{
-					IsSettingsButtonVisible = Visibility.Collapsed;
-					IsMainButtonVisible = Visibility.Visible;
-					Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Settings);
-				}
-				else
-				{
-					IsSettingsButtonVisible = Visibility.Visible;
-					IsMainButtonVisible = Visibility.Collapsed;
-					Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main);
-				}
+				Navigator.UpdateCurrentViewModelCommand.Execute(Navigator.CurrentWindowType == ViewType.Main
+					? ViewType.Settings
+					: ViewType.Main);
 			});
 			Task.Run(ArduinoDetector.Checker);
 			ArduinoDetector.ArduinoDisconnectedEvent = OnArduinoDisconnected;
 			ArduinoDetector.ArduinoDetectedEvent = OnArduinoDetected;
+		}
+
+		private void NavigatorOnOnCurrentWindowTypeChanged(object sender, EventArgs e)
+		{
+			if (Navigator.CurrentWindowType == ViewType.Main)
+			{
+				IsSettingsButtonVisible = Visibility.Collapsed;
+				IsMainButtonVisible = Visibility.Visible;
+			}
+			else
+			{
+				IsSettingsButtonVisible = Visibility.Visible;
+				IsMainButtonVisible = Visibility.Collapsed;
+			}
 		}
 
 		public bool IsErrorMessageVisible

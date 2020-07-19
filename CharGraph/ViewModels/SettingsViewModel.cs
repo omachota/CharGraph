@@ -5,7 +5,6 @@ using CharGraph.Infrastructure.SwitchView;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CharGraph.Models;
 using CharGraph.Views;
 
 namespace CharGraph.ViewModels
@@ -17,9 +16,8 @@ namespace CharGraph.ViewModels
 		private bool _isArduinoDialogOpen;
 		private object _arduinoDialogObject;
 		private List<string> _comPorts;
-		private string _selectedItem;
-		private Arduino Arduino { get; set; }
-
+		private string _selectedPort;
+		
 		public ICommand OpenArduinoDialogCommand { get; }
 		public ICommand AcceptArduinoDialogCommand { get; }
 		public ICommand CancelArduinoDialogCommand { get; }
@@ -31,6 +29,7 @@ namespace CharGraph.ViewModels
 			CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
 			OpenArduinoDialogCommand = new Command(OpenArduinoDialog);
 			Task.Run(ArduinoDetector.GetArduinoPorts).ContinueWith(t => ComPorts = t.Result);
+			// refresh comports until a ComPort is detected
 			Task.Run(async () =>
 			{
 				for (int i = 0; i < 10; i++)
@@ -59,10 +58,10 @@ namespace CharGraph.ViewModels
 			set => SetAndRaise(ref _comPorts, value);
 		}
 
-		public string SelectedItem
+		public string SelectedPort
 		{
-			get => _selectedItem;
-			set => SetAndRaise(ref _selectedItem, value);
+			get => _selectedPort;
+			set => SetAndRaise(ref _selectedPort, value);
 		}
 
 		private void OpenArduinoDialog()
@@ -74,6 +73,7 @@ namespace CharGraph.ViewModels
 		private void AcceptArduinoDialog()
 		{
 			IsArduinoDialogOpen = false;
+			// ArduinoDetector.Arduino.SerialPort.Open();
 			Task.Delay(TimeSpan.FromSeconds(0.5)).ContinueWith(t => _navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main),
 				TaskScheduler.FromCurrentSynchronizationContext());
 		}
@@ -82,15 +82,15 @@ namespace CharGraph.ViewModels
 		{
 			await Task.Run(() =>
 			{
-				Arduino = ArduinoDetector.GetArduino();
-				while (Arduino == null && !cts.IsCancellationRequested)
+				ArduinoDetector.GetArduino();
+				while (ArduinoDetector.Arduino == null && !cts.IsCancellationRequested)
 				{
-					Arduino = ArduinoDetector.GetArduino();
+					ArduinoDetector.GetArduino();
 					Thread.Sleep(1000);
 				}
 			}, cts.Token);
 
-			if (Arduino.Name != null)
+			if (ArduinoDetector.Arduino.Name != null)
 				OpenArduinoDialog();
 		}
 

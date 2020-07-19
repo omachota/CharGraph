@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using CharGraph.ViewModels;
 
 namespace CharGraph.Infrastructure.SwitchView
@@ -14,6 +15,8 @@ namespace CharGraph.Infrastructure.SwitchView
 		BaseViewModel CurrentViewModel { get; set; }
 
 		ICommand UpdateCurrentViewModelCommand { get; }
+
+		event EventHandler OnCurrentWindowTypeChanged;
 
 		ViewType CurrentWindowType { get; set; }
 	}
