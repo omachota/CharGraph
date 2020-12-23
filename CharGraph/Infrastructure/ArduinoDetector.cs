@@ -19,8 +19,12 @@ namespace CharGraph.Infrastructure
 
         public static Arduino Arduino;
 
-        // Experimental
-        public static async Task Checker()
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="delay">Delay in ms</param>
+        /// <returns></returns>
+        public static async Task ScanArduinoPorts(int delay)
         {
             List<string> ports;
             while (true)
@@ -28,6 +32,7 @@ namespace CharGraph.Infrastructure
                 ports = GetArduinoPorts();
                 if (_isArduinoDetected && ports.Count == 0)
                 {
+                    Arduino.ClosePort();
                     ArduinoDisconnectedEvent?.Invoke();
                     Arduino = null;
                     _isArduinoDetected = false;
@@ -36,12 +41,12 @@ namespace CharGraph.Infrastructure
 
                 if (_arduinoMessageShowed == false && ports.Count > 0)
                 {
-                    ArduinoDetectedEvent?.Invoke(ports[0]);
                     Arduino ??= new Arduino(ports[0], new SerialPort(ports[0], _baudRate));
+                    ArduinoDetectedEvent?.Invoke(ports[0]);
                     _arduinoMessageShowed = true;
                 }
 
-                await Task.Delay(2000).ConfigureAwait(false);
+                await Task.Delay(delay).ConfigureAwait(false);
             }
         }
 
@@ -95,6 +100,7 @@ namespace CharGraph.Infrastructure
                     _isArduinoDetected = true;
                     Arduino = new Arduino(portName,
                         new SerialPort(portName.Substring(portName.Length - 6, 4), _baudRate));
+                    return;
                 }
             }
         }

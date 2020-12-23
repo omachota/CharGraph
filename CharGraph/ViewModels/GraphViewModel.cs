@@ -6,7 +6,7 @@ namespace CharGraph.ViewModels
 	public class GraphViewModel : BaseViewModel
 	{
 		private string _test;
-		
+
 		public GraphViewModel()
 		{
 			if (ArduinoDetector.Arduino == null)
@@ -24,5 +24,7 @@ namespace CharGraph.ViewModels
 			get => _test;
 			set => SetAndRaise(ref _test, value);
 		}
+
+
 	}
 }

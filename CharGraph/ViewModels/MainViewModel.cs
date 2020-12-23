@@ -9,8 +9,8 @@ namespace CharGraph.ViewModels
 {
 	public class MainViewModel : BaseViewModel
 	{
-		private bool _isErrorMessageVisible;
-		private string _errorMessage;
+		private bool _isMessageVisible;
+		private string _message;
 		private Visibility _isSettingsButtonVisible = Visibility.Collapsed;
 		private Visibility _isMainButtonVisible = Visibility.Visible;
 		public INavigator Navigator { get; }
@@ -28,9 +28,9 @@ namespace CharGraph.ViewModels
 					? ViewType.Settings
 					: ViewType.Main);
 			});
-			Task.Run(ArduinoDetector.Checker);
 			ArduinoDetector.ArduinoDisconnectedEvent = OnArduinoDisconnected;
 			ArduinoDetector.ArduinoDetectedEvent = OnArduinoDetected;
+			Task.Run(() => ArduinoDetector.ScanArduinoPorts(2000)).ConfigureAwait(false);
 		}
 
 		private void NavigatorOnOnCurrentWindowTypeChanged(object sender, EventArgs e)
@@ -47,16 +47,16 @@ namespace CharGraph.ViewModels
 			}
 		}
 
-		public bool IsErrorMessageVisible
+		public bool IsMessageVisible
 		{
-			get => _isErrorMessageVisible;
-			set => SetAndRaise(ref _isErrorMessageVisible, value);
+			get => _isMessageVisible;
+			set => SetAndRaise(ref _isMessageVisible, value);
 		}
 
-		public string ErrorMessage
+		public string Message
 		{
-			get => _errorMessage;
-			set => SetAndRaise(ref _errorMessage, value);
+			get => _message;
+			set => SetAndRaise(ref _message, value);
 		}
 
 		public Visibility IsSettingsButtonVisible
@@ -74,18 +74,18 @@ namespace CharGraph.ViewModels
 		private async void OnArduinoDisconnected()
 		{
 			Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Settings);
-			ErrorMessage = "Arduino bylo odpojeno";
-			IsErrorMessageVisible = true;
+			Message = "Arduino bylo odpojeno";
+			IsMessageVisible = true;
 			await Task.Delay(3500).ConfigureAwait(false);
-			IsErrorMessageVisible = false;
+			IsMessageVisible = false;
 		}
 
 		private async void OnArduinoDetected(string portName)
 		{
-			ErrorMessage = "Arduino nalezeno na portu: " + portName;
-			IsErrorMessageVisible = true;
+			Message = "Arduino nalezeno na portu: " + portName;
+			IsMessageVisible = true;
 			await Task.Delay(3500).ConfigureAwait(false);
-			IsErrorMessageVisible = false;
+			IsMessageVisible = false;
 		}
 	}
 }

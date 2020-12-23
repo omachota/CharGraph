@@ -17,7 +17,7 @@ namespace CharGraph.ViewModels
 		private object _arduinoDialogObject;
 		private List<string> _comPorts;
 		private string _selectedPort;
-		
+
 		public ICommand OpenArduinoDialogCommand { get; }
 		public ICommand AcceptArduinoDialogCommand { get; }
 		public ICommand CancelArduinoDialogCommand { get; }
@@ -80,13 +80,13 @@ namespace CharGraph.ViewModels
 
 		public async Task Initialize(CancellationTokenSource cts)
 		{
-			await Task.Run(() =>
+			await Task.Run(async() =>
 			{
 				ArduinoDetector.GetArduino();
 				while (ArduinoDetector.Arduino == null && !cts.IsCancellationRequested)
 				{
 					ArduinoDetector.GetArduino();
-					Thread.Sleep(1000);
+					await Task.Delay(1000);
 				}
 			}, cts.Token);
 

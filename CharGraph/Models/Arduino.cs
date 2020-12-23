@@ -7,7 +7,7 @@ namespace CharGraph.Models
     public class Arduino : AbstractNotifyPropertyChanged
     {
         private SerialPort SerialPort { get; }
-        
+
         public Arduino(string name, SerialPort serialPort)
         {
             Name = name;
@@ -16,10 +16,15 @@ namespace CharGraph.Models
             SerialPort.DataReceived += SerialPortOnDataReceived;
         }
 
+        public void ClosePort()
+        {
+            SerialPort.Close();
+        }
+
         private void SerialPortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string data = SerialPort.ReadLine();
-            DataList.Add(ArduData.Serialize(data));
+            //string data = SerialPort.ReadLine(); // Throws exception
+            //DataList.Add(ArduData.Serialize(data));
         }
 
         public string Name { get; set; }

@@ -7,7 +7,9 @@
         xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
     <Grid>
         <Grid Margin="0 0 70 0">
             <ContentControl Content="{Binding Navigator.CurrentViewModel}"
@@ -29,6 +31,6 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <materialDesign:Snackbar Message="{Binding ErrorMessage}" IsActive="{Binding IsErrorMessageVisible}" />
+        <materialDesign:Snackbar Message="{Binding Message}" IsActive="{Binding IsMessageVisible}" />
     </Grid>
 </Window>

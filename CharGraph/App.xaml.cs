@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using CharGraph.Infrastructure;
 using CharGraph.ViewModels;
 
 namespace CharGraph
@@ -11,6 +12,8 @@ namespace CharGraph
         protected override void OnStartup(StartupEventArgs e)
         {
             Window window = new MainWindow(new MainViewModel());
+
+            // ThemeSwitcher.ApplyBase(true);
 
             window.Show();
 
