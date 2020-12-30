@@ -10,12 +10,14 @@ namespace CharGraph.Infrastructure.SwitchView
 		private bool _showArduinoDetectedDialog = true;
 		private readonly CancellationTokenSource _cts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
 		private readonly INavigator _navigator;
+		private readonly ArduinoDetector _arduinoDetector;
 
 		public event EventHandler CanExecuteChanged;
 
-		public UpdateCurrentViewModelCommand(INavigator navigator)
+		public UpdateCurrentViewModelCommand(INavigator navigator, ArduinoDetector arduinoDetector)
 		{
 			_navigator = navigator;
+			_arduinoDetector = arduinoDetector;
 		}
 
 		public bool CanExecute(object parameter)
@@ -32,7 +34,7 @@ namespace CharGraph.Infrastructure.SwitchView
 				switch (viewType)
 				{
 					case ViewType.Main:
-						_navigator.CurrentViewModel = new GraphViewModel();
+						_navigator.CurrentViewModel = new GraphViewModel(_arduinoDetector);
 						_cts.Cancel();
 						break;
 					case ViewType.Settings:
@@ -48,7 +50,7 @@ namespace CharGraph.Infrastructure.SwitchView
 
 		private void Settings()
 		{
-			var settingsViewModel = new SettingsViewModel(_navigator);
+			var settingsViewModel = new SettingsViewModel(_navigator, _arduinoDetector);
 			_navigator.CurrentViewModel = settingsViewModel;
 			if (_showArduinoDetectedDialog)
 			{

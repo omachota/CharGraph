@@ -8,9 +8,9 @@ namespace CharGraph.Infrastructure.SwitchView
 	{
 		private BaseViewModel _currentViewModel;
 
-		public Navigator()
+		public Navigator(ArduinoDetector arduinoDetector)
 		{
-			UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this);
+			UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, arduinoDetector);
 		}
 
 		public BaseViewModel CurrentViewModel
@@ -18,13 +18,13 @@ namespace CharGraph.Infrastructure.SwitchView
 			get => _currentViewModel;
 			set => SetAndRaise(ref _currentViewModel, value);
 		}
-		
+
 		public ICommand UpdateCurrentViewModelCommand { get; }
 
 		public event EventHandler OnCurrentWindowTypeChanged;
 
 		private ViewType _currentWindowType;
-		
+
 		public ViewType CurrentWindowType
 		{
 			get => _currentWindowType;

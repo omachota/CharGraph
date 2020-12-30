@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using CharGraph.Infrastructure;
 using CharGraph.Infrastructure.SwitchView;
 using System.Threading;
@@ -11,33 +11,32 @@ namespace CharGraph.ViewModels
 {
 	public class SettingsViewModel : BaseViewModel
 	{
-		private string _test;
-		private readonly INavigator _navigator;
 		private bool _isArduinoDialogOpen;
 		private object _arduinoDialogObject;
-		private List<string> _comPorts;
 		private string _selectedPort;
+		private readonly INavigator _navigator;
+		private readonly ArduinoDetector _arduinoDetector;
 
 		public ICommand OpenArduinoDialogCommand { get; }
 		public ICommand AcceptArduinoDialogCommand { get; }
 		public ICommand CancelArduinoDialogCommand { get; }
 
-		public SettingsViewModel(INavigator navigator)
+		public SettingsViewModel(INavigator navigator, ArduinoDetector arduinoDetector)
 		{
 			_navigator = navigator;
+			_arduinoDetector = arduinoDetector;
 			AcceptArduinoDialogCommand = new Command(AcceptArduinoDialog);
 			CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
 			OpenArduinoDialogCommand = new Command(OpenArduinoDialog);
-			Task.Run(ArduinoDetector.GetArduinoPorts).ContinueWith(t => ComPorts = t.Result);
 			// refresh comports until a ComPort is detected
-			Task.Run(async () =>
+			/*Task.Run(async () =>
 			{
 				for (int i = 0; i < 10; i++)
 				{
 					Test = $"Settings {i}";
 					await Task.Delay(1000).ConfigureAwait(false);
 				}
-			});
+			});*/
 		}
 
 		public bool IsArduinoDialogOpen
@@ -52,11 +51,7 @@ namespace CharGraph.ViewModels
 			set => SetAndRaise(ref _arduinoDialogObject, value);
 		}
 
-		public List<string> ComPorts
-		{
-			get => _comPorts;
-			set => SetAndRaise(ref _comPorts, value);
-		}
+		public ObservableCollection<string> ComPorts { get; set; }
 
 		public string SelectedPort
 		{
@@ -73,31 +68,21 @@ namespace CharGraph.ViewModels
 		private void AcceptArduinoDialog()
 		{
 			IsArduinoDialogOpen = false;
-			// ArduinoDetector.Arduino.SerialPort.Open();
 			Task.Delay(TimeSpan.FromSeconds(0.5)).ContinueWith(t => _navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main),
 				TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
 		public async Task Initialize(CancellationTokenSource cts)
 		{
-			await Task.Run(async() =>
+			await Task.Run(async () =>
 			{
-				ArduinoDetector.GetArduino();
-				while (ArduinoDetector.Arduino == null && !cts.IsCancellationRequested)
+				_arduinoDetector.InitializeArduino = true;
+				while (_arduinoDetector.Arduino == null && !cts.IsCancellationRequested)
 				{
-					ArduinoDetector.GetArduino();
-					await Task.Delay(1000);
+					await Task.Delay(2000);
 				}
 			}, cts.Token);
-
-			if (ArduinoDetector.Arduino.Name != null)
-				OpenArduinoDialog();
-		}
-
-		public string Test
-		{
-			get => _test;
-			set => SetAndRaise(ref _test, value);
+			OpenArduinoDialog();
 		}
 	}
 }

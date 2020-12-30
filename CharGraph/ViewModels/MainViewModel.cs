@@ -13,13 +13,15 @@ namespace CharGraph.ViewModels
 		private string _message;
 		private Visibility _isSettingsButtonVisible = Visibility.Collapsed;
 		private Visibility _isMainButtonVisible = Visibility.Visible;
-		public INavigator Navigator { get; }
+		private ArduinoDetector ArduinoDetector { get; }
 
+		public INavigator Navigator { get; }
 		public ICommand SwitchViewCommand { get; }
 
 		public MainViewModel()
 		{
-			Navigator = new Navigator();
+			ArduinoDetector = new ArduinoDetector();
+			Navigator = new Navigator(ArduinoDetector);
 			Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Settings);
 			Navigator.OnCurrentWindowTypeChanged += NavigatorOnOnCurrentWindowTypeChanged;
 			SwitchViewCommand = new Command(() =>
@@ -71,7 +73,7 @@ namespace CharGraph.ViewModels
 			set => SetAndRaise(ref _isMainButtonVisible, value);
 		}
 
-		private async void OnArduinoDisconnected()
+		private async Task OnArduinoDisconnected()
 		{
 			Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Settings);
 			Message = "Arduino bylo odpojeno";
@@ -80,7 +82,7 @@ namespace CharGraph.ViewModels
 			IsMessageVisible = false;
 		}
 
-		private async void OnArduinoDetected(string portName)
+		private async Task OnArduinoDetected(string portName)
 		{
 			Message = "Arduino nalezeno na portu: " + portName;
 			IsMessageVisible = true;

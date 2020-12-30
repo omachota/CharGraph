@@ -1,5 +1,4 @@
-﻿using System;
-using CharGraph.Infrastructure;
+﻿using CharGraph.Infrastructure;
 
 namespace CharGraph.ViewModels
 {
@@ -7,13 +6,16 @@ namespace CharGraph.ViewModels
 	{
 		private string _test;
 
-		public GraphViewModel()
+		public GraphViewModel(ArduinoDetector arduinoDetector)
 		{
-			if (ArduinoDetector.Arduino == null)
-				throw new Exception("Nemáme arduino");
+			if (arduinoDetector.Arduino == null)
+			{
+
+				// throw new Exception("Nemáme arduino");
+			}
 			else
 			{
-				Test = ArduinoDetector.Arduino.Name;
+				Test = arduinoDetector.Arduino.Name;
 
 			}
 			// TODO : fetch data to graph
@@ -24,7 +26,5 @@ namespace CharGraph.ViewModels
 			get => _test;
 			set => SetAndRaise(ref _test, value);
 		}
-
-
 	}
 }

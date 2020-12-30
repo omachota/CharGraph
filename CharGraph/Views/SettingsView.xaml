@@ -10,7 +10,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <Grid>
-        <TextBlock Text="{Binding Test}" />
+        <!-- <TextBlock Text="{Binding ArduinoDetector.ArduinoName}" /> -->
         <materialDesign:DialogHost HorizontalAlignment="Center" VerticalAlignment="Center"
                                    IsOpen="{Binding IsArduinoDialogOpen}"
                                    DialogContent="{Binding ArduinoDialogObject}"
