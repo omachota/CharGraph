@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO.Ports;
 using CharGraph.Infrastructure;
 
@@ -13,8 +14,9 @@ namespace CharGraph.Models
 		{
 			Name = name;
 			SerialPort = serialPort;
-			SerialPort.Open();
 			SerialPort.DataReceived += SerialPortOnDataReceived;
+			SerialPort.BaudRate = 115200;
+			SerialPort.Open();
 		}
 
 		public void ClosePort()
@@ -22,21 +24,39 @@ namespace CharGraph.Models
 			SerialPort.Close();
 		}
 
-		private void SerialPortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
+		public void Flush()
 		{
-			try
+			SerialPort.DiscardInBuffer();
+		}
+
+		public void Write(string s)
+		{
+			if (SerialPort.IsOpen)
 			{
-				var data = SerialPort.ReadLine();
-				DataList.Add(ArduData.Serialize(data));
-			}
-			catch (Exception exception)
-			{
-				Console.WriteLine(exception);
+				SerialPort.WriteLine(s);
 			}
 		}
 
-		public string Name { get; set; }
+		public delegate void ArduinoDetected(string portName);
 
-		public readonly List<ArduData> DataList = new List<ArduData>();
+		public ArduinoDetected ReadEvent;
+
+		private void SerialPortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
+		{
+			string data = "";
+
+			try
+			{
+				data = SerialPort.ReadLine();
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine(exception);
+			}
+
+			ReadEvent?.Invoke(data);
+		}
+
+		public string Name { get; set; }
 	}
 }

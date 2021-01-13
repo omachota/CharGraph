@@ -22,7 +22,7 @@ namespace CharGraph.ViewModels
 		{
 			ArduinoDetector = new ArduinoDetector();
 			Navigator = new Navigator(ArduinoDetector);
-			Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Settings);
+			Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main);
 			Navigator.OnCurrentWindowTypeChanged += NavigatorOnOnCurrentWindowTypeChanged;
 			SwitchViewCommand = new Command(() =>
 			{

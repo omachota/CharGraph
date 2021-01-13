@@ -29,23 +29,20 @@ namespace CharGraph.Infrastructure.SwitchView
 		{
 			var viewType = (ViewType) parameter;
 
-			if (_navigator.CurrentWindowType != viewType)
+			switch (viewType)
 			{
-				switch (viewType)
-				{
-					case ViewType.Main:
-						_navigator.CurrentViewModel = new GraphViewModel(_arduinoDetector);
-						_cts.Cancel();
-						break;
-					case ViewType.Settings:
-						Settings();
-						break;
-					default:
-						throw new ArgumentOutOfRangeException($"{nameof(Execute)}	{nameof(parameter)}");
-				}
-
-				_navigator.CurrentWindowType = viewType;
+				case ViewType.Main:
+					_navigator.CurrentViewModel = new GraphViewModel(_arduinoDetector);
+					_cts.Cancel();
+					break;
+				case ViewType.Settings:
+					Settings();
+					break;
+				default:
+					throw new ArgumentOutOfRangeException($"{nameof(Execute)}	{nameof(parameter)}");
 			}
+
+			_navigator.CurrentWindowType = viewType;
 		}
 
 		private void Settings()
@@ -57,7 +54,6 @@ namespace CharGraph.Infrastructure.SwitchView
 				_showArduinoDetectedDialog = false;
 				settingsViewModel.Initialize(_cts);
 			}
-
 		}
 	}
 }

@@ -4,18 +4,42 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
+             xmlns:views="clr-namespace:CharGraph.Views"
              mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewModels:GraphViewModel,IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <views:ZoomingModeCoverter x:Key="ZoomingModeCoverter" />
+    </UserControl.Resources>
     <Grid>
         <TextBlock Text="{Binding Test}" />
 
-        <wpf:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" >
-            <wpf:CartesianChart.AxisY>
-                <wpf:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></wpf:Axis>
-            </wpf:CartesianChart.AxisY>
+        <wpf:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Zoom="{Binding ZoomingMode}">
             <wpf:CartesianChart.AxisX>
-                <wpf:Axis Title="Month" Labels="{Binding Labels}"></wpf:Axis>
+                <wpf:Axis Name="X" Title="Volts" LabelFormatter="{Binding XFormatter}" />
             </wpf:CartesianChart.AxisX>
+            <wpf:CartesianChart.AxisY>
+                <wpf:Axis Name="Y" Title="Sales" LabelFormatter="{Binding YFormatter}" />
+            </wpf:CartesianChart.AxisY>
         </wpf:CartesianChart>
+
+        <!-- <DataGrid x:Name="dataGrid" -->
+        <!--           ItemsSource="{Binding DataList}" -->
+        <!--           HorizontalAlignment="Left" -->
+        <!--           Margin="0,0,0,0" -->
+        <!--           VerticalAlignment="Top"> -->
+        <!-- </DataGrid> -->
+
+        <StackPanel>
+            <Button Command="{Binding Start}" HorizontalAlignment="Center" VerticalAlignment="Bottom">Start</Button>
+            <Button Click="ToogleZoomingMode">
+                <TextBlock>
+                    Toggle zoming mode, current is:
+                    <TextBlock Text="{Binding ZoomingMode, Converter={StaticResource ZoomingModeCoverter}}" />
+                </TextBlock>
+            </Button>
+            <Button Click="ResetZoomOnClick">Reset Zoom</Button>
+        </StackPanel>
     </Grid>
 </UserControl>

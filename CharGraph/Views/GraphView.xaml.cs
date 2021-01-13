@@ -1,71 +1,78 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
-using CharGraph.Models;
+using System.Windows.Data;
+using CharGraph.ViewModels;
 using LiveCharts;
-using LiveCharts.Defaults;
-using LiveCharts.Wpf;
 
 namespace CharGraph.Views
 {
 	public partial class GraphView : UserControl
 	{
-		public List<ArduData> ArduData { get; } = new List<ArduData>();
-
+		private GraphViewModel _viewModel;
 		public GraphView()
 		{
 			InitializeComponent();
-
-			List<string> titles = new List<string>();
-
-			using (StreamReader sr = new StreamReader(@"D:\Download\Dokument.csv"))
-			{
-				string line;
-				string title = "";
-
-				while ((line = sr.ReadLine()) != null)
-				{
-					if (line.Contains(";"))
-					{
-						ArduData.Add(new ArduData(line, title));
-					}
-					else if ("new line" == line)
-					{
-						title = sr.ReadLine();
-						titles.Add(title);
-					}
-					else if ("Stop" == line)
-					{
-						break;
-					}
-				}
-			}
-
-			ArduData = ArduData.GroupBy(elem=>elem.X).Select(group=>group.First()).ToList();
-
-			ArduData = ArduData.OrderBy(x => x.X).ToList();
-
-			for (int i = 0; i < titles.Count; i++)
-			{
-				SeriesCollection.Add(new LineSeries
-				{
-					Title = titles[i],
-				});
-
-				var points = ArduData.Where(x => x.Title == titles[i]).ToList();
-
-				SeriesCollection[SeriesCollection.Count - 1].Values = new ChartValues<ObservablePoint>();
-
-				for (int j = 0; j < points.Count; j++)
-				{
-					SeriesCollection[SeriesCollection.Count - 1].Values.Add(new ObservablePoint(points[j].X, points[j].Y));
-				}
-			}
-			DataContext = this;
 		}
 
-		public SeriesCollection SeriesCollection { get; } = new SeriesCollection();
+		private void ToogleZoomingMode(object sender, RoutedEventArgs e)
+		{
+			_viewModel = (GraphViewModel)DataContext;
+
+			switch (_viewModel.ZoomingMode)
+			{
+				case ZoomingOptions.None:
+					_viewModel.ZoomingMode = ZoomingOptions.X;
+					break;
+				case ZoomingOptions.X:
+					_viewModel.ZoomingMode = ZoomingOptions.Y;
+					break;
+				case ZoomingOptions.Y:
+					_viewModel.ZoomingMode = ZoomingOptions.Xy;
+					break;
+				case ZoomingOptions.Xy:
+					_viewModel.ZoomingMode = ZoomingOptions.None;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		private void ResetZoomOnClick(object sender, RoutedEventArgs e)
+		{
+			//Use the axis MinValue/MaxValue properties to specify the values to display.
+			//use double.Nan to clear it.
+
+			X.MinValue = double.NaN;
+			X.MaxValue = double.NaN;
+			Y.MinValue = double.NaN;
+			Y.MaxValue = double.NaN;
+		}
+	}
+
+	public class ZoomingModeCoverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			switch ((ZoomingOptions) value)
+			{
+				case ZoomingOptions.None:
+					return "None";
+				case ZoomingOptions.X:
+					return "X";
+				case ZoomingOptions.Y:
+					return "Y";
+				case ZoomingOptions.Xy:
+					return "XY";
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

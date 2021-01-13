@@ -13,7 +13,7 @@ namespace CharGraph.Infrastructure
 		private bool _isArduinoDetected;
 		private bool _arduinoMessageShowed;
 
-		private readonly int _baudRate = 2_000_000; // changable
+		private readonly int _baudRate = 115200; // changable
 		private const string VidPattern = @"VID_([0-9A-F]{4})";
 		private const string PidPattern = @"PID_([0-9A-F]{4})";
 

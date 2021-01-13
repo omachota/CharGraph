@@ -22,7 +22,7 @@ namespace CharGraph.Models
             line = line.Replace('.', ','); // TODO : handle this with CultureInfo
             var splitedLine = line.Split(';');
             X = Double.Parse(splitedLine[0]);
-            Y = Double.Parse(splitedLine[1]);
+            Y = Double.Parse(splitedLine[1])*1000;
         }
     }
 }
