@@ -46,7 +46,6 @@ namespace CharGraph.ViewModels
 		{
 			if (_arduinoDetector.Arduino != null)
 			{
-				string title = "";
 				DataList.Clear();
 
 				if (SeriesCollection.Count > 0)
@@ -55,20 +54,20 @@ namespace CharGraph.ViewModels
 					SeriesCollection.RemoveAt(0);
 				}
 				List<string> titles = new List<string>();
-				_arduinoDetector.Arduino.ReadEvent += incommingData =>
+				_arduinoDetector.Arduino.ReadEvent += incomingData =>
 				{
 					Application.Current.Dispatcher.Invoke(() =>
 					{
-						if (incommingData.Contains(";"))
+						if (incomingData.Contains(";"))
 						{
-							DataList.Add(new ArduData(incommingData, titles.Last()));
+							DataList.Add(new ArduData(incomingData, titles.Last()));
 						}
-						else if (incommingData.Contains("|"))
+						else if (incomingData.Contains("|"))
 						{
-							string[] datas = incommingData.Split('|');
+							string[] datas = incomingData.Split('|');
 							titles.Add(datas[1]);
 						}
-						else if (incommingData.Contains("Stop"))
+						else if (incomingData.Contains("Stop"))
 						{
 							DataList = DataList.GroupBy(elem => elem.X).Select(group => group.First()).ToList();
 
