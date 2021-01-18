@@ -68,7 +68,7 @@ namespace CharGraph.ViewModels
 		private void AcceptArduinoDialog()
 		{
 			IsArduinoDialogOpen = false;
-			Task.Delay(TimeSpan.FromSeconds(0.5)).ContinueWith(t => _navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main),
+			Task.Delay(TimeSpan.FromSeconds(0.5)).ContinueWith(_ => _navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main),
 				TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
