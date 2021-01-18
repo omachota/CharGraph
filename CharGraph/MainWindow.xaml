@@ -30,6 +30,7 @@
                     <materialDesign:PackIcon Kind="Home" />
                 </Button>
             </StackPanel>
+
         </Grid>
         <materialDesign:Snackbar Message="{Binding Message}" IsActive="{Binding IsMessageVisible}" />
     </Grid>

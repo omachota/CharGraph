@@ -15,7 +15,7 @@
     <Grid>
         <TextBlock Text="{Binding Test}" />
 
-        <wpf:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Zoom="{Binding ZoomingMode}">
+        <wpf:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Zoom="{Binding ZoomingMode}" Margin="10,10,10,100">
             <wpf:CartesianChart.AxisX>
                 <wpf:Axis Name="X" Title="Volts" LabelFormatter="{Binding XFormatter}" />
             </wpf:CartesianChart.AxisX>
@@ -30,9 +30,9 @@
         <!--           Margin="0,0,0,0" -->
         <!--           VerticalAlignment="Top"> -->
         <!-- </DataGrid> -->
-
-        <StackPanel>
-            <Button Command="{Binding Start}" HorizontalAlignment="Center" VerticalAlignment="Bottom">Start</Button>
+        <StackPanel VerticalAlignment="Bottom" Height="100">
+            
+            <Button Command="{Binding Start}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="27" Margin="119,0">Start</Button>
             <Button Click="ToogleZoomingMode">
                 <TextBlock>
                     Toggle zoming mode, current is:
@@ -41,5 +41,7 @@
             </Button>
             <Button Click="ResetZoomOnClick">Reset Zoom</Button>
         </StackPanel>
+
     </Grid>
+    
 </UserControl>
