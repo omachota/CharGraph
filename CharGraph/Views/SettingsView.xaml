@@ -13,19 +13,19 @@
         <StackPanel HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Height="264" Width="368">
             <Label x:Name="ROZSAH"  Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ" RenderTransformOrigin="0.351,0.499"/>
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
-                <Slider
+                <Slider x:Name="S1neg"
     Minimum="-12"
     Maximum="-0"
     Style="{StaticResource MaterialDesignDiscreteSlider}"
                 
     ToolTip="MaterialDesignDiscreteSlider"
-    Value="-12" Margin="0,19,-15,10" Width="163" />
+    Value="{Binding Min1}" Margin="0,19,-15,10" Width="163" IsDirectionReversed="True" />
                 <Slider
     Minimum="0"
     Maximum="24"
     Style="{StaticResource MaterialDesignDiscreteSlider}"
     ToolTip="MaterialDesignDiscreteSlider"
-    Value="24" Margin="0,19,-15,10" Width="114" />
+    Value="{Binding Max1}" Margin="0,19,-15,10" Width="114" ValueChanged="Slider_ValueChanged" />
                 
             </StackPanel>
             <Label x:Name="ROZSAHBASE"  Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499"/>
@@ -36,13 +36,13 @@
     Style="{StaticResource MaterialDesignDiscreteSlider}"
                 
     ToolTip="MaterialDesignDiscreteSlider"
-    Value="-12" Margin="0,19,-15,10" Width="163" />
+    Value="{Binding Min2}" Margin="0,19,-15,10" Width="163" IsDirectionReversed="True" />
                 <Slider
     Minimum="0"
     Maximum="24"
     Style="{StaticResource MaterialDesignDiscreteSlider}"
     ToolTip="MaterialDesignDiscreteSlider"
-    Value="24" Margin="0,19,-15,10" Width="114" />
+    Value="{Binding Max2}" Margin="0,19,-15,10" Width="114" />
 
             </StackPanel>
             <StackPanel Height="60" Orientation="Horizontal">

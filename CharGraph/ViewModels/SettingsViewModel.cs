@@ -11,6 +11,7 @@ namespace CharGraph.ViewModels
 {
 	public class SettingsViewModel : BaseViewModel
 	{
+		private int _min1, _min2, _max1, _max2;
 		private bool _isArduinoDialogOpen;
 		private object _arduinoDialogObject;
 		private string _selectedPort;
@@ -44,7 +45,26 @@ namespace CharGraph.ViewModels
 			get => _isArduinoDialogOpen;
 			set => SetAndRaise(ref _isArduinoDialogOpen, value);
 		}
-
+		public int Min1
+        {
+			get => _min1;
+			set => SetAndRaise(ref _min1, value);
+        }
+		public int Min2
+		{
+			get => _min2;
+			set => SetAndRaise(ref _min2, value);
+		}
+		public int Max1
+		{
+			get => _max1;
+			set => SetAndRaise(ref _max1, value);
+		}
+		public int Max2
+		{
+			get => _max2;
+			set => SetAndRaise(ref _max2, value);
+		}
 		public object ArduinoDialogObject
 		{
 			get => _arduinoDialogObject;
