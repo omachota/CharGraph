@@ -44,7 +44,7 @@
                 <Button IsCancel="True"
                         Grid.Column="1"
                         Style="{DynamicResource MaterialDesignFlatButton}"
-                        Command="{Binding CancelArduinoDialogCommand}">
+                        Command="{Binding Max2ValueChanged}">
                     NE
                 </Button>
             </Grid>

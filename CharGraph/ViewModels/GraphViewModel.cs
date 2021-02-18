@@ -12,7 +12,6 @@ namespace CharGraph.ViewModels
 {
 	public class GraphViewModel : BaseViewModel
 	{
-		private string _test;
 		public Func<double, string> XFormatter { get; set; }
 		public Func<double, string> YFormatter { get; set; }
 		private ArduinoDetector _arduinoDetector { get; }
@@ -23,7 +22,6 @@ namespace CharGraph.ViewModels
 		public GraphViewModel(ArduinoDetector arduinoDetector)
 		{
 			_arduinoDetector = arduinoDetector;
-			Test = "AHOJ";
 			Start = new Command(OnStart);
 			ZoomingMode = ZoomingOptions.Y;
 		}
@@ -34,12 +32,6 @@ namespace CharGraph.ViewModels
 		{
 			get => _zoomingMode;
 			set => SetAndRaise(ref _zoomingMode, value);
-		}
-
-		public string Test
-		{
-			get => _test;
-			set => SetAndRaise(ref _test, value);
 		}
 
 		private void OnStart()

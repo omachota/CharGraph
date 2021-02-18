@@ -89,5 +89,5 @@ namespace CharGraph.ViewModels
 			await Task.Delay(3500).ConfigureAwait(false);
 			IsMessageVisible = false;
 		}
-	}
+    }
 }
