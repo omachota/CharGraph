@@ -14,7 +14,7 @@ namespace CharGraph.ViewModels
 	{
 		public Func<double, string> XFormatter { get; set; }
 		public Func<double, string> YFormatter { get; set; }
-		private ArduinoDetector _arduinoDetector { get; }
+		private readonly ArduinoDetector _arduinoDetector;
 		private ZoomingOptions _zoomingMode;
 		private List<ArduData> DataList { get; set; } = new List<ArduData>();
 		public Command Start { get; }

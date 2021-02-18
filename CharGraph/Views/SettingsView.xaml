@@ -12,7 +12,7 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Height="264" Width="368">
-            <Label x:Name="ROZSAH"  Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ" RenderTransformOrigin="0.351,0.499"/>
+            <Label x:Name="ROZSAH" Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ" RenderTransformOrigin="0.351,0.499" />
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
                 <Slider Minimum="-12"
                         Maximum="-0"
@@ -38,7 +38,7 @@
                 </Slider>
 
             </StackPanel>
-            <Label x:Name="ROZSAHBASE"  Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499"/>
+            <Label x:Name="ROZSAHBASE" Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499" />
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
                 <Slider Minimum="-12"
                         Maximum="-0"
@@ -57,7 +57,7 @@
                         Maximum="24"
                         Style="{StaticResource MaterialDesignDiscreteSlider}"
                         ToolTip="MaterialDesignDiscreteSlider"
-                        Value="{Binding Max2}" Margin="0,19,-15,10" Width="114" >
+                        Value="{Binding Max2}" Margin="0,19,-15,10" Width="114">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Max2ValueChanged}" />
@@ -68,16 +68,17 @@
             </StackPanel>
             <StackPanel Height="60" Orientation="Horizontal">
                 <StackPanel Height="60" Width="190">
-                    <ComboBox SelectedValue="{Binding Fuse1}"
+                    <ComboBox SelectedIndex="{Binding Fuse1Index}"
+                              ItemsSource="{Binding Fuses}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               materialDesign:HintAssist.Hint="Pojistka Silová"
                               materialDesign:HintAssist.HelperText="Pojistka Silová"
                               IsEditable="False" Width="170" HorizontalAlignment="Left">
-                        <ComboBoxItem Content="100mA"/>
-                        <ComboBoxItem Content="250mA"/>
-                        <ComboBoxItem Content="500mA"/>
-                        <ComboBoxItem Content="1000mA"/>
-                        <ComboBoxItem Content="1500mA"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat={}{0} mA}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding Fuse1Changed}" />
@@ -86,16 +87,17 @@
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Height="60" HorizontalAlignment="Right">
-                    <ComboBox SelectedValue="{Binding Fuse2}"
+                    <ComboBox SelectedIndex="{Binding Fuse2Index}"
+                              ItemsSource="{Binding Fuses2}"
                               materialDesign:HintAssist.Hint="Pojistka Bázová"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               materialDesign:HintAssist.HelperText="Pojistka Bázová"
                               IsEditable="False" Width="170">
-                        <ComboBoxItem Content="20mA"/>
-                        <ComboBoxItem Content="50mA"/>
-                        <ComboBoxItem Content="100mA"/>
-                        <ComboBoxItem Content="200mA"/>
-                        <ComboBoxItem Content="300mA"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat={}{0} mA}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding Fuse2Changed}" />
@@ -104,8 +106,6 @@
                     </ComboBox>
                 </StackPanel>
             </StackPanel>
-
         </StackPanel>
-
     </Grid>
 </UserControl>

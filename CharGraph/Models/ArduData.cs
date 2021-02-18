@@ -10,12 +10,6 @@ namespace CharGraph.Models
 
         public double Y { get; set; }
 
-        public static ArduData Serialize(string data)
-        {
-            string[] splittedData = data.Split('\t');
-            return new ArduData("", "");
-        }
-
         public ArduData(string line, string title)
         {
             Title = title;
