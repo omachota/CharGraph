@@ -105,6 +105,7 @@ namespace CharGraph.ViewModels
             if (_arduinoDetector.Arduino != null)
             {
                 _arduinoDetector.Arduino.Write(text);
+                Thread.Sleep(25);
             }
         }
     }
