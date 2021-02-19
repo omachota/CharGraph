@@ -15,10 +15,10 @@
             <Label x:Name="ROZSAH" Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ" RenderTransformOrigin="0.351,0.499" />
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
                 <Slider Minimum="-12"
-                        Maximum="-0"
+                        Maximum="-1"
                         Style="{StaticResource MaterialDesignDiscreteSlider}"
                         ToolTip="MaterialDesignDiscreteSlider"
-                        Value="{Binding Min1}" Margin="0,19,-15,10" Width="163" IsDirectionReversed="True">
+                        Value="{Binding Min1}" Margin="0,19,-15,10" Width="130">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Min1ValueChanged}" />
@@ -29,7 +29,7 @@
                         Maximum="24"
                         Style="{StaticResource MaterialDesignDiscreteSlider}"
                         ToolTip="MaterialDesignDiscreteSlider"
-                        Value="{Binding Max1}" Margin="0,19,-15,10" Width="114" ValueChanged="Slider_ValueChanged">
+                        Value="{Binding Max1}" Margin="0,19,-15,10" Width="160" ValueChanged="Slider_ValueChanged">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Max1ValueChanged}" />
@@ -45,8 +45,8 @@
                         Style="{StaticResource MaterialDesignDiscreteSlider}"
                         ToolTip="MaterialDesignDiscreteSlider"
                         Value="{Binding Min2}"
-                        Margin="0,19,-15,10" Width="163"
-                        IsDirectionReversed="True">
+                        
+                        Margin="0,19,-15,10" Width="130">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Min2ValueChanged}" />
@@ -57,7 +57,7 @@
                         Maximum="24"
                         Style="{StaticResource MaterialDesignDiscreteSlider}"
                         ToolTip="MaterialDesignDiscreteSlider"
-                        Value="{Binding Max2}" Margin="0,19,-15,10" Width="114">
+                        Value="{Binding Max2}" Margin="0,19,-15,10" Width="160">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Max2ValueChanged}" />
