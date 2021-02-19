@@ -12,13 +12,13 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Height="264" Width="368">
-            <Label x:Name="ROZSAH" Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ" RenderTransformOrigin="0.351,0.499" />
+            <Label x:Name="ROZSAH" Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ"/>
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
-                <Slider Minimum="-12"
-                        Maximum="-1"
-                        Style="{StaticResource MaterialDesignDiscreteSlider}"
+                <Slider Minimum="0"
+                        Maximum="12"
+                        Style="{StaticResource MaterialDesignDiscreteHorizontalSliderOwn}"
                         ToolTip="MaterialDesignDiscreteSlider"
-                        Value="{Binding Min1}" Margin="0,19,-15,10" Width="130">
+                        Value="{Binding Min1}" Margin="0,19,-15,10" Width="130" IsDirectionReversed="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Min1ValueChanged}" />
@@ -29,7 +29,7 @@
                         Maximum="24"
                         Style="{StaticResource MaterialDesignDiscreteSlider}"
                         ToolTip="MaterialDesignDiscreteSlider"
-                        Value="{Binding Max1}" Margin="0,19,-15,10" Width="160" ValueChanged="Slider_ValueChanged">
+                        Value="{Binding Max1}" Margin="0,19,-15,10" Width="160">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Max1ValueChanged}" />
@@ -40,13 +40,13 @@
             </StackPanel>
             <Label x:Name="ROZSAHBASE" Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499" />
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
-                <Slider Minimum="-12"
-                        Maximum="-0"
-                        Style="{StaticResource MaterialDesignDiscreteSlider}"
+                <Slider Minimum="0"
+                        Maximum="12"
+                        Style="{StaticResource MaterialDesignDiscreteHorizontalSliderOwn}"
                         ToolTip="MaterialDesignDiscreteSlider"
                         Value="{Binding Min2}"
-                        
-                        Margin="0,19,-15,10" Width="130">
+                        Margin="0,19,-15,10" Width="130"
+                        IsDirectionReversed="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding Min2ValueChanged}" />

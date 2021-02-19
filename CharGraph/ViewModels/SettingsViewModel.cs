@@ -18,7 +18,6 @@ namespace CharGraph.ViewModels
         private readonly INavigator _navigator;
         private readonly ArduinoDetector _arduinoDetector;
 
-        public ICommand OpenArduinoDialogCommand { get; }
         public ICommand AcceptArduinoDialogCommand { get; }
         public ICommand CancelArduinoDialogCommand { get; }
         public ICommand Min1ValueChanged { get; }
@@ -35,9 +34,8 @@ namespace CharGraph.ViewModels
             _arduinoDetector = arduinoDetector;
             AcceptArduinoDialogCommand = new Command(AcceptArduinoDialog);
             CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
-            OpenArduinoDialogCommand = new Command(OpenArduinoDialog);
-            Min1ValueChanged = new Command(() => Write($"Min1 {Min1}"));
-            Min2ValueChanged = new Command(() => Write($"Min2 {Min2}"));
+            Min1ValueChanged = new Command(() => Write($"Min1 {-Min1}"));
+            Min2ValueChanged = new Command(() => Write($"Min2 {-Min2}"));
             Max1ValueChanged = new Command(() => Write($"Max1 {Max1}"));
             Max2ValueChanged = new Command(() => Write($"Max2 {Max2}"));
             Fuse1Changed = new Command(() => Write($"Fuse1 {Fuses[Fuse1Index]}"));
@@ -69,12 +67,6 @@ namespace CharGraph.ViewModels
             get => _max2;
             set => SetAndRaise(ref _max2, value);
         }
-
-        public object ArduinoDialogObject
-        {
-            get => _arduinoDialogObject;
-            set => SetAndRaise(ref _arduinoDialogObject, value);
-        }
         public int Fuse1Index
         {
             get => _fuse1Index;
@@ -88,12 +80,6 @@ namespace CharGraph.ViewModels
 
         public List<string> Fuses { get; } = new List<string>() {"100", "250", "500", "1000", "1500"};
         public List<string> Fuses2 { get; } = new List<string>() {"20", "50", "100", "200", "300"};
-
-        private void OpenArduinoDialog()
-        {
-            ArduinoDialogObject = new ArduinoDetectedDialog();
-            IsArduinoDialogOpen = true;
-        }
 
         private void AcceptArduinoDialog()
         {
@@ -112,7 +98,6 @@ namespace CharGraph.ViewModels
                     await Task.Delay(2000);
                 }
             }, cts.Token);
-            OpenArduinoDialog();
         }
 
         private void Write(string text)
