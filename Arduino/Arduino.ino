@@ -29,7 +29,7 @@ Adafruit_MCP4725 dac2;
 //    case INA226_MODE_SHUNT_BUS_CONT:  Serial.println("Shunt and Bus, Continuous"); break;
 //    default: Serial.println("unknown");
 //  }
-//  
+//
 //  Serial.print("Samples average:       ");
 //  switch (ina.getAverages())
 //  {
@@ -71,7 +71,7 @@ Adafruit_MCP4725 dac2;
 //    case INA226_SHUNT_CONV_TIME_8244US: Serial.println("8.244ms"); break;
 //    default: Serial.println("unknown");
 //  }
-//  
+//
 //  Serial.print("Max possible current:  ");
 //  Serial.print(ina.getMaxPossibleCurrent());
 //  Serial.println(" A");
@@ -88,119 +88,152 @@ Adafruit_MCP4725 dac2;
 //  Serial.print(ina.getMaxPower());
 //  Serial.println(" W");
 //}
-
+int fuse1 = 100, fuse2 = 20, min1 = -5, min2 = -5, max1 = 5, max2 = 5;
 void setup()
 {
-	Serial.begin(115200);
+  Serial.begin(115200);
+  Serial.setTimeout(20);
+  /*Serial.println("Initialize INA226");
+    Serial.println("-----------------------------------------------");
+  */
+  // Default INA226 address is 0x40
+  ina.begin(); //drain
+  ina2.begin(0x41); //baze
+  // Configure INA226
+  ina.configure(INA226_AVERAGES_64, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
+  ina2.configure(INA226_AVERAGES_64, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
+  // Calibrate INA226. Rshunt = 0.01 ohm, Max excepted current = 4A
+  ina.calibrate(0.0546, 2);
+  ina2.calibrate(0.270, 1);
+  // Display configuration
+  //checkConfig();
+  /*Serial.println("-----------------------------------------------");
+    Serial.println("Initialize MCP4725");
+    Serial.println("-----------------------------------------------");
+  */
+  dac.begin(0x61);
+  dac2.begin(0x60);
 
-	/*Serial.println("Initialize INA226");
-	Serial.println("-----------------------------------------------");
-*/
-	// Default INA226 address is 0x40
-	ina.begin();
-	ina2.begin(0x41);
-	// Configure INA226
-	ina.configure(INA226_AVERAGES_64, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
-	ina2.configure(INA226_AVERAGES_64, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
-	// Calibrate INA226. Rshunt = 0.01 ohm, Max excepted current = 4A
-	ina.calibrate(0.0546, 2);
-	ina2.calibrate(0.270, 1);
-	// Display configuration
-	//checkConfig();
-	/*Serial.println("-----------------------------------------------");
-	Serial.println("Initialize MCP4725");
-	Serial.println("-----------------------------------------------");
-*/
-	dac.begin(0x60);
-	dac2.begin(0x61);
-
-	//Serial.println("-----------------------------------------------");
+  //Serial.println("-----------------------------------------------");
 }
 
 void loop()
 {
-	//Serial.println("------------------------------------------");
-	
-  if(Serial.available()>0){
-    while(Serial.available()>0){
-  if(Serial.readString().startsWith("init"))
-  mereni();
+  //Serial.println("------------------------------------------");
+
+  if (Serial.available() > 0) {
+    String s = Serial.readString();
+    if (s.startsWith("init"))
+      mereni();
+
+    else if (s.startsWith("Min1"))
+    {
+      min1 = s.substring(4).toInt();
+    }
+    else if (s.startsWith("Min2"))
+    {
+      min2 = s.substring(4).toInt();
+    }
+    else if (s.startsWith("Max1"))
+    {
+      max1 = s.substring(4).toInt();
+    }
+    else if (s.startsWith("Max2"))
+    {
+      max2 = s.substring(4).toInt();
+    }
+    else if (s.startsWith("Fuse1"))
+    {
+      fuse1 = s.substring(5).toInt();
+    }
+    else if (s.startsWith("Fuse2"))
+    {
+      fuse2 = s.substring(5).toInt();
     }
 
   }
-	delay(200);
+  delay(200);
 }
-void mereni(){
+void mereni() {
+
+  for (float i = min2; i <= max2; i += 0.5 ) {
+    volt(min1, i);
+    delay(1000);
+    float current2 = ina2.readShuntCurrent() * 1000;
     Serial.print("new line |");
-  Serial.println("150mV");
-  for (float i = -10; i <= 10; i += 1) {
-    volt(i, i);
-    delay(50);
-    //measure();  
-
+    //Serial.print(current2, 5);
+    //Serial.println("mA");
     Serial.print(ina2.readBusVoltage(), 5);
-    Serial.print("; ");
-    Serial.println(ina2.readShuntCurrent(), 5);
+    Serial.println("V");
 
-  }
-  Serial.print("new line |");
-  Serial.println("180mV");
-  for (float i = -10; i <= 10; i += 1) {
-    volt(i, i);
-    delay(50);
-    //measure();  
+    for (float j = min1; j <= max1; j += (float)(max1 - min1) / 25.00) {
+      volt(j, i);
+      delay(50);
+      //measure();
+      float current1 = ina.readShuntCurrent();
+      if (alert(current1*1000, current2))break;
+          Serial.print(ina.readBusVoltage() -11.4, 5);
+          Serial.print("; ");
+          Serial.println(current1, 5);
 
-    Serial.print(ina2.readBusVoltage(), 5);
-    Serial.print("; ");
-    Serial.println(ina2.readShuntCurrent(), 5);
-
-  }
-  Serial.println("Stop");
+    }
+}
+volt(0,0);
+Serial.println("Stop");
 }
 void measure() {
-	Serial.print("Bus voltage:   ");
-	Serial.print(ina.readBusVoltage(), 5);
-	Serial.print(" V      ");
+  Serial.print("Bus voltage:   ");
+  Serial.print(ina.readBusVoltage(), 5);
+  Serial.print(" V      ");
 
-	Serial.print("Bus voltage:   ");
-	Serial.print(ina2.readBusVoltage(), 5);
-	Serial.println(" V      ");
-
-
-	Serial.print("Bus power:     ");
-	Serial.print(ina.readBusPower(), 5);
-	Serial.print(" W      ");
-
-	Serial.print("Bus power:     ");
-	Serial.print(ina2.readBusPower(), 5);
-	Serial.println(" W      ");
+  Serial.print("Bus voltage:   ");
+  Serial.print(ina2.readBusVoltage(), 5);
+  Serial.println(" V      ");
 
 
-	Serial.print("Shunt voltage: ");
-	Serial.print(ina.readShuntVoltage(), 5);
-	Serial.print(" V     ");
+  Serial.print("Bus power:     ");
+  Serial.print(ina.readBusPower(), 5);
+  Serial.print(" W      ");
 
-	Serial.print("Shunt voltage: ");
-	Serial.print(ina2.readShuntVoltage(), 5);
-	Serial.println(" V     ");
-
-
-	Serial.print("Shunt current: ");
-	Serial.print(ina.readShuntCurrent(), 5);
-	Serial.print(" A     ");
-
-	Serial.print("Shunt current: ");
-	Serial.print(ina2.readShuntCurrent(), 5);
-	Serial.println(" A     ");
+  Serial.print("Bus power:     ");
+  Serial.print(ina2.readBusPower(), 5);
+  Serial.println(" W      ");
 
 
-	Serial.println("");
-	delay(1000);
+  Serial.print("Shunt voltage: ");
+  Serial.print(ina.readShuntVoltage(), 5);
+  Serial.print(" V     ");
+
+  Serial.print("Shunt voltage: ");
+  Serial.print(ina2.readShuntVoltage(), 5);
+  Serial.println(" V     ");
+
+
+  Serial.print("Shunt current: ");
+  Serial.print(ina.readShuntCurrent(), 5);
+  Serial.print(" A     ");
+
+  Serial.print("Shunt current: ");
+  Serial.print(ina2.readShuntCurrent(), 5);
+  Serial.println(" A     ");
+
+
+  Serial.println("");
+  delay(1000);
 }
+bool alert(float cur1, float cur2)
+{
+  if (abs(cur1) > fuse1 || abs(cur2) > fuse2) {
 
+    volt(0, 0);
+    return true;
+  }
+  return false;
+
+}
 void volt(float voltage1, float voltage2) {
-	voltage1 = map(voltage1, -12.00, 24.00, 0, 4095);
-	voltage2 = map(voltage2, -12.00, 24.00, 0, 4095);
-	dac.setVoltage(voltage1, false);
-	dac2.setVoltage(voltage2, false);
+  voltage1 = map(voltage1, -12.00, 24.00, 0, 4095);
+  voltage2 = map(voltage2, -12.00, 24.00, 0, 4095);
+  dac.setVoltage(voltage1, false);
+  dac2.setVoltage(voltage2, false);
 }
