@@ -100,8 +100,8 @@ void setup()
   ina.begin(); //drain
   ina2.begin(0x41); //baze
   // Configure INA226
-  ina.configure(INA226_AVERAGES_64, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
-  ina2.configure(INA226_AVERAGES_64, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
+  ina.configure(INA226_AVERAGES_128, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
+  ina2.configure(INA226_AVERAGES_128, INA226_BUS_CONV_TIME_1100US, INA226_SHUNT_CONV_TIME_1100US, INA226_MODE_SHUNT_BUS_CONT);
   // Calibrate INA226. Rshunt = 0.01 ohm, Max excepted current = 4A
   ina.calibrate(0.0546, 2);
   ina2.calibrate(0.270, 1);
@@ -158,17 +158,17 @@ void mereni() {
 
   for (float i = min2; i <= max2; i += 0.5 ) {
     volt(min1, i);
-    delay(1000);
+    delay(150);
     float current2 = ina2.readShuntCurrent() * 1000;
     Serial.print("new line |");
     //Serial.print(current2, 5);
     //Serial.println("mA");
-    Serial.print(ina2.readBusVoltage(), 5);
+    Serial.print(ina2.readBusVoltage() -11.4, 5);
     Serial.println("V");
 
-    for (float j = min1; j <= max1; j += (float)(max1 - min1) / 25.00) {
+    for (float j = min1; j <= max1; j += (float)(max1 - min1) / 50.00) {
       volt(j, i);
-      delay(50);
+      delay(35);
       //measure();
       float current1 = ina.readShuntCurrent();
       if (alert(current1*1000, current2))break;

@@ -78,6 +78,7 @@ namespace CharGraph.ViewModels
 
 								for (int j = 0; j < points.Count; j++)
 								{
+									if(points[j].X < 1 || points[j].Y > 0)
 									SeriesCollection[SeriesCollection.Count - 1].Values.Add(new ObservablePoint(points[j].X, points[j].Y));
 								}
 							}

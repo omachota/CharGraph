@@ -15,7 +15,7 @@ namespace CharGraph.Models
 			SerialPort = serialPort;
 			SerialPort.DataReceived += SerialPortOnDataReceived;
 			SerialPort.BaudRate = 115200;
-			SerialPort.ReadTimeout = 3000;
+			SerialPort.ReadTimeout = 5000;
 			SerialPort.Open();
 		}
 
