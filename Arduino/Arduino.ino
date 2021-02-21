@@ -142,11 +142,11 @@ void loop()
     {
       max2 = s.substring(4).toInt();
     }
-    else if (s.startsWith("Fuse1"))
+    else if (s.startsWith("Fuse2"))
     {
       fuse1 = s.substring(5).toInt();
     }
-    else if (s.startsWith("Fuse2"))
+    else if (s.startsWith("Fuse1"))
     {
       fuse2 = s.substring(5).toInt();
     }
@@ -158,7 +158,7 @@ void mereni() {
 
   for (float i = min2; i <= max2; i += 0.5 ) {
     volt(min1, i);
-    delay(150);
+    delay(200);
     float current2 = ina2.readShuntCurrent() * 1000;
     Serial.print("new line |");
     //Serial.print(current2, 5);
@@ -168,7 +168,8 @@ void mereni() {
 
     for (float j = min1; j <= max1; j += (float)(max1 - min1) / 50.00) {
       volt(j, i);
-      delay(35);
+      if(j == min1) delay(200);
+      delay(50);
       //measure();
       float current1 = ina.readShuntCurrent();
       if (alert(current1*1000, current2))break;

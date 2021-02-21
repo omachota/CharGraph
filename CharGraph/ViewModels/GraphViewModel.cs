@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using CharGraph.Infrastructure;
 using CharGraph.Models;
 using LiveCharts;
@@ -69,8 +70,9 @@ namespace CharGraph.ViewModels
 							{
 								SeriesCollection.Add(new LineSeries
 								{
+									Fill = Brushes.Transparent,
 									Title = titles[i],
-								});
+								}) ;
 
 								var points = DataList.Where(x => x.Title == titles[i]).ToList();
 
