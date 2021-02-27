@@ -9,7 +9,7 @@
         d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
         Title="CharGraph" Height="450" Width="800" MinWidth="450" MinHeight="450"
         Background="{DynamicResource MaterialDesignPaper}"
-        TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+        TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Icon="transistor.png">
     <Grid>
         <Grid Margin="0 0 70 0">
             <ContentControl Content="{Binding Navigator.CurrentViewModel}"
