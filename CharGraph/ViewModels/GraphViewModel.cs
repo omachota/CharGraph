@@ -19,7 +19,7 @@ namespace CharGraph.ViewModels
 		private ZoomingOptions _zoomingMode;
 		private List<ArduData> DataList { get; set; } = new List<ArduData>();
 		public Command Start { get; }
-
+		public bool Blink { get; set; } = false;
 		public GraphViewModel(ArduinoDetector arduinoDetector)
 		{
 			_arduinoDetector = arduinoDetector;
@@ -49,6 +49,8 @@ namespace CharGraph.ViewModels
 				List<string> titles = new List<string>();
 				_arduinoDetector.Arduino.ReadEvent += incomingData =>
 				{
+					
+					
 					Application.Current.Dispatcher.Invoke(() =>
 					{
 						if (incomingData.Contains(";"))
@@ -87,7 +89,7 @@ namespace CharGraph.ViewModels
 							titles.Clear();
 							_arduinoDetector.Arduino.Flush();
 						}
-
+						
 					});
 				};
 				_arduinoDetector.Arduino.Write("init");

@@ -13,6 +13,8 @@
         <views:ZoomingModeCoverter x:Key="ZoomingModeCoverter" />
     </UserControl.Resources>
     <Grid>
+        <ProgressBar
+  IsIndeterminate="{Binding Blink}" VerticalAlignment="Top"/>
         <wpf:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Zoom="{Binding ZoomingMode}" Margin="10,10,10,100">
             <wpf:CartesianChart.AxisX>
                 <wpf:Axis Name="X" Title="Volts" LabelFormatter="{Binding XFormatter}" />
