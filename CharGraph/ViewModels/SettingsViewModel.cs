@@ -5,6 +5,7 @@ using CharGraph.Infrastructure.SwitchView;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using LiveCharts;
 
 namespace CharGraph.ViewModels
 {
@@ -15,7 +16,9 @@ namespace CharGraph.ViewModels
 		private bool _isArduinoDialogOpen;
 		private readonly INavigator _navigator;
 		private readonly ArduinoDetector _arduinoDetector;
-
+		public Func<double, string> XFormatter { get; set; }
+		public Func<double, string> YFormatter { get; set; }
+		
 		public ICommand AcceptArduinoDialogCommand { get; }
 		public ICommand CancelArduinoDialogCommand { get; }
 		public ICommand Min1ValueChanged { get; }
