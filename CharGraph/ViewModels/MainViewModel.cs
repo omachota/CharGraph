@@ -75,7 +75,6 @@ namespace CharGraph.ViewModels
 
 		private async Task OnArduinoDisconnected()
 		{
-
 			Message = "Arduino bylo odpojeno";
 			IsMessageVisible = true;
 			await Task.Delay(3500).ConfigureAwait(false);
@@ -91,5 +90,5 @@ namespace CharGraph.ViewModels
 			await Task.Delay(3500).ConfigureAwait(false);
 			IsMessageVisible = false;
 		}
-    }
+	}
 }

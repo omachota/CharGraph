@@ -19,6 +19,5 @@ namespace CharGraph.Infrastructure
 
 			paletteHelper.SetTheme(theme);
 		}
-
 	}
 }

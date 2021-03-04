@@ -11,6 +11,7 @@ namespace CharGraph.Views
 	public partial class GraphView : UserControl
 	{
 		private GraphViewModel _viewModel;
+
 		public GraphView()
 		{
 			InitializeComponent();
@@ -18,7 +19,7 @@ namespace CharGraph.Views
 
 		private void ToogleZoomingMode(object sender, RoutedEventArgs e)
 		{
-			_viewModel = (GraphViewModel)DataContext;
+			_viewModel = (GraphViewModel) DataContext;
 
 			switch (_viewModel.ZoomingMode)
 			{

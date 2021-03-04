@@ -56,6 +56,7 @@ namespace CharGraph.Infrastructure
 					}
 				}
 			}
+
 			return settings;
 		}
 	}

@@ -15,13 +15,13 @@
                                          Width="40"
                                          Height="40"
                                          Margin="0 7"
-                                         Foreground="{StaticResource PrimaryHueMidBrush}"/>
+                                         Foreground="{StaticResource PrimaryHueMidBrush}" />
                 <TextBlock Foreground="Gray"
                            Width="225"
                            Margin="10 5"
                            FontSize="16"
                            TextWrapping="Wrap">
-                           Arduino úspěšně detekováno. Chcete přejít do hlavního okna?
+                    Arduino úspěšně detekováno. Chcete přejít do hlavního okna?
                 </TextBlock>
             </StackPanel>
             <!--<TextBlock Foreground="Gray"
@@ -32,8 +32,8 @@
             <Grid HorizontalAlignment="Stretch"
                   Margin="0 5 0 5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Button IsDefault="True"
                         Grid.Column="0"

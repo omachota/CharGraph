@@ -15,7 +15,7 @@
             <ContentControl Content="{Binding Navigator.CurrentViewModel}"
                             Margin="5,5,0,5"
                             FontSize="20"
-                            HorizontalAlignment="Stretch"/>
+                            HorizontalAlignment="Stretch" />
         </Grid>
         <Grid Width="60" HorizontalAlignment="Right">
             <StackPanel Margin="5">

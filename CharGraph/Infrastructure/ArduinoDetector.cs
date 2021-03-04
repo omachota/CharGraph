@@ -53,6 +53,7 @@ namespace CharGraph.Infrastructure
 
 				await Task.Delay(delay).ConfigureAwait(false);
 			}
+
 			// ReSharper disable once FunctionNeverReturns
 		}
 
