@@ -11,12 +11,11 @@ namespace CharGraph.Models
 		public int Max2 { get; set; } = 24;
 		public int Fuse1 { get; set; } = 100;
 		public int Fuse2 { get; set; } = 20;
-		public List<int> Fuses { get; } = new List<int>() { 100, 250, 500, 1000, 1500 };
-		public List<int> Fuses2 { get; } = new List<int>() { 20, 50, 100, 200, 300 };
+		private List<int> Fuses { get; } = new List<int>() {100, 250, 500, 1000, 1500};
+		private List<int> Fuses2 { get; } = new List<int>() {20, 50, 100, 200, 300};
 
 		public async Task WriteToArduino(Arduino arduino)
 		{
-			
 			arduino.Write($"Min1 {-Min1}");
 			await Task.Delay(50);
 			arduino.Write($"Min2 {-Min2}");

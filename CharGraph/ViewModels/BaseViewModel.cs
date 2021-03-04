@@ -4,6 +4,5 @@ namespace CharGraph.ViewModels
 {
 	public class BaseViewModel : AbstractNotifyPropertyChanged
 	{
-
 	}
 }

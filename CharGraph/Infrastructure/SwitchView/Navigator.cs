@@ -34,6 +34,5 @@ namespace CharGraph.Infrastructure.SwitchView
 				_currentWindowType = value;
 			}
 		}
-
 	}
 }

@@ -12,7 +12,7 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Height="264" Width="368">
-            <Label x:Name="ROZSAH" Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ"/>
+            <Label x:Name="Rozsah" Margin="10,0,10,-16" Content="ROZSAH MĚŘENÍ" />
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
                 <Slider Minimum="0"
                         Maximum="12"
@@ -38,7 +38,7 @@
                 </Slider>
 
             </StackPanel>
-            <Label x:Name="ROZSAHBASE" Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499" />
+            <Label x:Name="Rozsahbase" Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499" />
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Height="90" Width="280">
                 <Slider Minimum="0"
                         Maximum="12"
