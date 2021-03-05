@@ -84,6 +84,7 @@ namespace CharGraph.ViewModels
 									SeriesCollection[SeriesCollection.Count - 1].Values.Add(new ObservablePoint(points[j].X, points[j].Y));
 								}
 							}
+
 							titles.Clear();
 							_arduinoDetector.Arduino.Flush();
 						}

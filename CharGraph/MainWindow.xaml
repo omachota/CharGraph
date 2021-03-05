@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainViewModel,IsDesignTimeCreatable=False}"
-        Title="CharGraph" Height="450" Width="800" MinWidth="450" MinHeight="450"
+        Title="CharGraph" Height="450" Width="974" MinWidth="450" MinHeight="450"
         Background="{DynamicResource MaterialDesignPaper}"
         TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Icon="transistor.png">
     <Grid>
@@ -21,12 +21,14 @@
             <StackPanel Margin="5">
                 <Button Visibility="{Binding IsSettingsButtonVisible}"
                         Command="{Binding SwitchViewCommand}"
-                        ToolTip="Přejít do nastavení">
+                        ToolTip="Přejít do nastavení"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
                     <materialDesign:PackIcon Kind="Settings" />
                 </Button>
                 <Button Visibility="{Binding IsMainButtonVisible}"
                         Command="{Binding SwitchViewCommand}"
-                        ToolTip="Přejít do hlavního okna">
+                        ToolTip="Přejít do hlavního okna"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
                     <materialDesign:PackIcon Kind="Home" />
                 </Button>
             </StackPanel>

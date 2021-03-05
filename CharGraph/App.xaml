@@ -2,18 +2,25 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
-             xmlns:views="clr-namespace:CharGraph.Views">
+             xmlns:views="clr-namespace:CharGraph.Views" xmlns:materialDesign="clr-namespace:MaterialDesignThemes.MahApps;assembly=MaterialDesignThemes.MahApps">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.LightBlue.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
-                <ResourceDictionary Source="/Styles/SliderStyle.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            
+                <ResourceDictionary.MergedDictionaries>
+                    <materialDesign:MahAppsBundledTheme BaseTheme="Dark" PrimaryColor="Grey" SecondaryColor="Lime"/>
+
+                    <!-- MahApps -->
+                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+
+                    <!-- Material Design -->
+                    <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+
+                    <!-- Material Design: MahApps Compatibility -->
+                    <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml"/>
+
+                   
+                </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
                 <views:SettingsView />
@@ -24,5 +31,7 @@
             </DataTemplate>
 
         </ResourceDictionary>
+     
+
     </Application.Resources>
 </Application>
