@@ -8,18 +8,20 @@ using System.Windows.Input;
 using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.Defaults;
+using System.Windows.Media;
 
 namespace CharGraph.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
-        private int _min1 = -12, _min2 = -12, _max1 = 24, _max2 = 24, _lines = 5, _resolution = 0, _nullpoint = 0;
+        private int _min1 = -12, _min2 = -12, _max1 = 24, _max2 = 24, _lines = 5, _resolution = 0, _nullpoint = 0, _minimum = -12, _maximum = 24;
         private bool _mode = false;
-        private float _exp = 0;
+        private double _exp = 0, _tick = 1;
         private int _fuse1Index, _fuse2Index;
         private bool _isArduinoDialogOpen;
         private readonly INavigator _navigator;
         private readonly ArduinoDetector _arduinoDetector;
+        private String _bazemin, _bazemax;
         public Func<double, string> XFormatter { get; set; }
         public Func<double, string> YFormatter { get; set; }
 
@@ -34,6 +36,7 @@ namespace CharGraph.ViewModels
         public ICommand ExpChanged { get; }
         public ICommand NullPointChanged { get; }
         public ICommand ResolutionChanged { get; }
+        public ICommand ModeChanged { get; }
 
         public SeriesCollection Series { get; set; } = new SeriesCollection();
         public SettingsViewModel(INavigator navigator, ArduinoDetector arduinoDetector)
@@ -43,15 +46,64 @@ namespace CharGraph.ViewModels
             AcceptArduinoDialogCommand = new Command(AcceptArduinoDialog);
             CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
             Min1ValueChanged = new Command(() => Write($"Min1 {-Min1}"));
-            Min2ValueChanged = new Command(() => Write($"Min2 {-Min2}"));
+            Min2ValueChanged = new Command(() => { Write($"Min2 {-Min2}"); Update(); });
             Max1ValueChanged = new Command(() => Write($"Max1 {Max1}"));
-            Max2ValueChanged = new Command(() => Write($"Max2 {Max2}"));
+            Max2ValueChanged = new Command(() => { Write($"Max2 {Max2}"); Update(); });
             Fuse1Changed = new Command(() => Write($"Fuse1 {Fuses[Fuse1Index]}"));
             Fuse2Changed = new Command(() => Write($"Fuse2 {Fuses2[Fuse2Index]}"));
             ExpChanged = new Command(() => Draw());
             NullPointChanged = new Command(() => Draw());
             ResolutionChanged = new Command(() => Draw());
+            ModeChanged = new Command(() => EventResetMode());
             ParseSettings();
+            Draw();
+            Update();
+        }
+
+        private void Update()
+        {
+            string tmpmin = Min2.ToString();
+            string tmpmax = Max2.ToString();
+
+            if (!Mode)
+            {
+                tmpmin += " mA";
+                tmpmax += " mA";
+
+            }
+            else
+            {
+
+                tmpmin += " V";
+                tmpmax += " V";
+
+
+            }
+
+            BazeMax = tmpmax;
+            BazeMin = tmpmin;
+
+        }
+
+        private void EventResetMode()
+        {
+            if (!Mode)
+            {
+                Minimum = -10;
+                Maximum = 20;
+                Tick = 1;
+                Min2 = Min2 / 12;
+                Max2 = Max2 / 12;
+            }
+            else
+            {
+                Minimum = -120;
+                Maximum = 240;
+                Tick = 1;
+                Min2 = Min2 * 12;
+                Max2 = Max2 * 12;
+            }
+           
         }
 
         private void ParseSettings()
@@ -121,17 +173,41 @@ namespace CharGraph.ViewModels
             get => _nullpoint;
             set => SetAndRaise(ref _nullpoint, value);
         }
+        public int Minimum
+        {
+            get => _minimum;
+            set => SetAndRaise(ref _minimum, value);
+        }
+        public int Maximum
+        {
+            get => _maximum;
+            set => SetAndRaise(ref _maximum, value);
+        }
         public bool Mode
         {
             get => _mode;
             set => SetAndRaise(ref _mode, value);
         }
-        public float Exp
+        public double Exp
         {
             get => _exp;
             set => SetAndRaise(ref _exp, value);
         }
-
+        public double Tick
+        {
+            get => _tick;
+            set => SetAndRaise(ref _tick, value);
+        }
+        public String BazeMax
+        {
+            get => _bazemax;
+            set => SetAndRaise(ref _bazemax, value);
+        }
+        public String BazeMin
+        {
+            get => _bazemin;
+            set => SetAndRaise(ref _bazemin, value);
+        }
         public List<int> Fuses { get; } = new List<int>() { 100, 250, 500, 1000, 1500 };
         public List<int> Fuses2 { get; } = new List<int>() { 20, 50, 100, 200, 300 };
 
@@ -186,11 +262,12 @@ namespace CharGraph.ViewModels
             LineSeries line = new LineSeries();
             line.Title = "positive";
             line.PointGeometrySize = 0;
+            line.Fill = Brushes.Transparent;
             ChartValues<ObservablePoint> chart = new LiveCharts.ChartValues<ObservablePoint>();
-            for (int i = 0; i < 36; i++)
+            for (int i = 0; i < 30; i++)
             {
                 double y = multiplier * Math.Pow(1.00 / (1 + i), Exp);
-                if (i + NullPoint <= 24)
+                if (i + NullPoint <= 20)
                 {
                     ObservablePoint point = new ObservablePoint(i + NullPoint, y);
                     chart.Add(point);
@@ -202,11 +279,12 @@ namespace CharGraph.ViewModels
             LineSeries line2 = new LineSeries();
             line2.Title = "negative";
             line2.PointGeometrySize = 0;
+            line2.Fill = Brushes.Transparent;
             ChartValues<ObservablePoint> chart2 = new LiveCharts.ChartValues<ObservablePoint>();
-            for (int i = 0; i < 36; i++)
+            for (int i = 0; i < 30; i++)
             {
                 double y = multiplier * Math.Pow(1.00 / (1 + i), Exp);
-                if (-i + NullPoint >= -12)
+                if (-i + NullPoint >= -10)
                 {
                     ObservablePoint point = new ObservablePoint(-i + NullPoint, y);
                     chart2.Add(point);
