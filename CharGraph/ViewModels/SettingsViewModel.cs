@@ -14,14 +14,14 @@ namespace CharGraph.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
-        private int _min1 = -12, _min2 = -12, _max1 = 24, _max2 = 24, _lines = 5, _resolution = 0, _nullpoint = 0, _minimum = -12, _maximum = 24;
-        private bool _mode = false;
-        private double _exp = 0, _tick = 1;
+        private int _min1 = -12, _min2 = -12, _max1 = 24, _max2 = 24, _lines = 5, _resolution, _nullpoint, _minimum = -12, _maximum = 24;
+        private bool _mode;
+        private double _exp, _tick = 1;
         private int _fuse1Index, _fuse2Index;
         private bool _isArduinoDialogOpen;
         private readonly INavigator _navigator;
         private readonly ArduinoDetector _arduinoDetector;
-        private String _bazemin, _bazemax;
+        private string _bazemin, _bazemax;
         public Func<double, string> XFormatter { get; set; }
         public Func<double, string> YFormatter { get; set; }
 
@@ -46,15 +46,15 @@ namespace CharGraph.ViewModels
             AcceptArduinoDialogCommand = new Command(AcceptArduinoDialog);
             CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
             Min1ValueChanged = new Command(() => Write($"Min1 {-Min1}"));
-            Min2ValueChanged = new Command(() => { Write($"Min2 {-Min2}"); Update(); });
+            Min2ValueChanged = new Command<double>(_ => { Write($"Min2 {-Min2}"); Update(); });
             Max1ValueChanged = new Command(() => Write($"Max1 {Max1}"));
-            Max2ValueChanged = new Command(() => { Write($"Max2 {Max2}"); Update(); });
+            Max2ValueChanged = new Command<double>(_ => { Write($"Max2 {Max2}"); Update(); });
             Fuse1Changed = new Command(() => Write($"Fuse1 {Fuses[Fuse1Index]}"));
             Fuse2Changed = new Command(() => Write($"Fuse2 {Fuses2[Fuse2Index]}"));
-            ExpChanged = new Command(() => Draw());
-            NullPointChanged = new Command(() => Draw());
-            ResolutionChanged = new Command(() => Draw());
-            ModeChanged = new Command(() => EventResetMode());
+            ExpChanged = new Command(Draw);
+            NullPointChanged = new Command(Draw);
+            ResolutionChanged = new Command(Draw);
+            ModeChanged = new Command(EventResetMode);
             ParseSettings();
             Draw();
             Update();
@@ -65,24 +65,19 @@ namespace CharGraph.ViewModels
             string tmpmin = Min2.ToString();
             string tmpmax = Max2.ToString();
 
-            if (!Mode)
+            if (Mode)
             {
                 tmpmin += " mA";
                 tmpmax += " mA";
-
             }
             else
             {
-
                 tmpmin += " V";
                 tmpmax += " V";
-
-
             }
 
             BazeMax = tmpmax;
             BazeMin = tmpmin;
-
         }
 
         private void EventResetMode()
@@ -92,18 +87,19 @@ namespace CharGraph.ViewModels
                 Minimum = -10;
                 Maximum = 20;
                 Tick = 1;
-                Min2 = Min2 / 12;
-                Max2 = Max2 / 12;
+                Min2 /= 12;
+                Max2 /= 12;
             }
             else
             {
                 Minimum = -120;
                 Maximum = 240;
                 Tick = 1;
-                Min2 = Min2 * 12;
-                Max2 = Max2 * 12;
+                Min2 *= 12;
+                Max2 *= 12;
             }
-           
+
+            Update();
         }
 
         private void ParseSettings()
@@ -198,12 +194,12 @@ namespace CharGraph.ViewModels
             get => _tick;
             set => SetAndRaise(ref _tick, value);
         }
-        public String BazeMax
+        public string BazeMax
         {
             get => _bazemax;
             set => SetAndRaise(ref _bazemax, value);
         }
-        public String BazeMin
+        public string BazeMin
         {
             get => _bazemin;
             set => SetAndRaise(ref _bazemin, value);
@@ -246,16 +242,15 @@ namespace CharGraph.ViewModels
             int multiplier = 10;
             switch (Resolution)
             {
-                case (0):
+                case 0:
                     multiplier = 10;
                     break;
-                case (1):
+                case 1:
                     multiplier = 25;
                     break;
-                case (2):
+                case 2:
                     multiplier = 50;
                     break;
-
             }
 
             Series.Clear();
@@ -263,7 +258,7 @@ namespace CharGraph.ViewModels
             line.Title = "positive";
             line.PointGeometrySize = 0;
             line.Fill = Brushes.Transparent;
-            ChartValues<ObservablePoint> chart = new LiveCharts.ChartValues<ObservablePoint>();
+            ChartValues<ObservablePoint> chart = new ChartValues<ObservablePoint>();
             for (int i = 0; i < 30; i++)
             {
                 double y = multiplier * Math.Pow(1.00 / (1 + i), Exp);
@@ -280,7 +275,7 @@ namespace CharGraph.ViewModels
             line2.Title = "negative";
             line2.PointGeometrySize = 0;
             line2.Fill = Brushes.Transparent;
-            ChartValues<ObservablePoint> chart2 = new LiveCharts.ChartValues<ObservablePoint>();
+            ChartValues<ObservablePoint> chart2 = new ChartValues<ObservablePoint>();
             for (int i = 0; i < 30; i++)
             {
                 double y = multiplier * Math.Pow(1.00 / (1 + i), Exp);

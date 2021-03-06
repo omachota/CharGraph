@@ -6,16 +6,15 @@
              xmlns:viewModels="clr-namespace:CharGraph.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" 
+             xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-            
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel,IsDesignTimeCreatable=False}" Width="742.129" Height="470">
 
     <Grid HorizontalAlignment="Left" Width="732" Margin="0,0,0,-5">
-        <StackPanel Height="Auto" Margin="10,10,0,10" VerticalAlignment="Stretch" Orientation="Horizontal" >
+        <StackPanel Height="Auto" Margin="10,10,0,10" VerticalAlignment="Stretch" Orientation="Horizontal">
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Height="455" Width="322">
-                <Label x:Name="ROZSAH" Margin="10,0,0,-16" Content="ROZSAH MĚŘENÍ" HorizontalAlignment="Left" Height="50"/>
+                <Label x:Name="ROZSAH" Margin="10,0,0,-16" Content="ROZSAH MĚŘENÍ" HorizontalAlignment="Left" Height="50" />
                 <StackPanel Height="67">
                     <mah:RangeSlider Width="312"
                                      Height="40"
@@ -27,56 +26,56 @@
                                      Style="{StaticResource MahApps.Styles.RangeSlider.Win10}"
                                      LowerValue="{Binding Min1}"
                                      UpperValue="{Binding Max1}">
-
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LowerValueChanged">
+                                <i:InvokeCommandAction Command="{Binding Min1ValueChanged}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="UpperValueChanged">
+                                <i:InvokeCommandAction Command="{Binding Max1ValueChanged}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </mah:RangeSlider>
-
-
                 </StackPanel>
                 <Label x:Name="ROZSAHBASE" Margin="10,0,10,-16" Content="ROZSAH BÁZE" RenderTransformOrigin="0.351,0.499" Height="50" />
                 <StackPanel Height="53" HorizontalAlignment="Left" Width="322">
-                    <mah:RangeSlider Width="312" 
+                    <mah:RangeSlider Width="312"
                                      mah:SliderHelper.EnableMouseWheel="MouseHover"
-                                     Minimum="{Binding Minimum}" 
-                                     Maximum="{Binding Maximum}" 
-                                     TickFrequency="{Binding Tick}" 
-                                     Height="40" 
-                                     Margin="6,0,4,0" 
-                                     IsSnapToTickEnabled="True" 
-                                     AutoToolTipPlacement="BottomRight" 
-                                     
+                                     Minimum="{Binding Minimum}"
+                                     Maximum="{Binding Maximum}"
+                                     TickFrequency="{Binding Tick}"
+                                     Height="40"
+                                     Margin="6,0,4,0"
+                                     IsSnapToTickEnabled="True"
+                                     AutoToolTipPlacement="BottomRight"
                                      Style="{StaticResource MahApps.Styles.RangeSlider.Win10}"
                                      LowerValue="{Binding Min2}"
-                                     UpperValue="{Binding Max2}"
-                                     
-                                     >
+                                     UpperValue="{Binding Max2}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LowerValueChanged">
+                                <i:InvokeCommandAction Command="{Binding Min2ValueChanged}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="UpperValueChanged">
+                                <i:InvokeCommandAction Command="{Binding Max2ValueChanged}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <mah:RangeSlider.AutoToolTipLowerValueTemplate>
                             <DataTemplate DataType="mah:RangeSliderAutoTooltipValues">
-                                
-                                    
-                                    <TextBlock  HorizontalAlignment="Right" Text="text" />
-                                    
-                                    
-                               
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="{Binding DataContext.BazeMin, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
                             </DataTemplate>
                         </mah:RangeSlider.AutoToolTipLowerValueTemplate>
                         <mah:RangeSlider.AutoToolTipUpperValueTemplate>
                             <DataTemplate DataType="mah:RangeSliderAutoTooltipValues">
-
-
-                                <TextBlock  HorizontalAlignment="Right" Text="{Binding BazeMax}" />
-
-
-                             
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="{Binding DataContext.BazeMax, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
                             </DataTemplate>
                         </mah:RangeSlider.AutoToolTipUpperValueTemplate>
                     </mah:RangeSlider>
-
                 </StackPanel>
                 <StackPanel Height="106" Orientation="Horizontal">
                     <ComboBox SelectedIndex="{Binding Fuse1Index}"
-                              
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                              ItemsSource="{Binding Fuses}" 
+                              ItemsSource="{Binding Fuses}"
                               materialDesign:HintAssist.Hint="Pojistka Silová"
                               materialDesign:HintAssist.HelperText="Pojistka Silová"
                               IsEditable="False" Width="151" HorizontalAlignment="Left" Height="63" Margin="0,13,0,10">
@@ -90,20 +89,18 @@
                                 <i:InvokeCommandAction Command="{Binding Fuse1Changed}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-
                     </ComboBox>
-                    <GridSplitter Width="14" Margin="0,0,0,-4" Foreground="{x:Null}" Background="{x:Null}"/>
+                    <GridSplitter Width="14" Margin="0,0,0,-4" Foreground="{x:Null}" Background="{x:Null}" />
                     <ComboBox SelectedIndex="{Binding Fuse2Index}"
                               ItemsSource="{Binding Fuses2}"
                               materialDesign:HintAssist.Hint="Pojistka Bázová"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               materialDesign:HintAssist.HelperText="Pojistka Bázová"
                               IsEditable="False" Margin="0,13,20,10" Width="154" Height="63"
-                              HorizontalAlignment="Right" >
-
+                              HorizontalAlignment="Right">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding StringFormat=\{0\} mA}" />
+                                <TextBlock Text="{Binding StringFormat={}{0} mA}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                         <i:Interaction.Triggers>
@@ -112,15 +109,13 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
-
                 </StackPanel>
-                <ComboBox 
-                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                               
-                              materialDesign:HintAssist.Hint="Rozlišení"
-                              materialDesign:HintAssist.HelperText="Rozlišení"
-                              IsEditable="False" Width="151" HorizontalAlignment="Left" Height="63" Margin="0,18,0,28" SelectedIndex="{Binding Resolution}">
-
+                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          materialDesign:HintAssist.Hint="Rozlišení"
+                          materialDesign:HintAssist.HelperText="Rozlišení"
+                          IsEditable="False" Width="151" HorizontalAlignment="Left"
+                          Height="63" Margin="0,18,0,28"
+                          SelectedIndex="{Binding Resolution}">
                     <ComboBoxItem>Low</ComboBoxItem>
                     <ComboBoxItem>Medium</ComboBoxItem>
                     <ComboBoxItem>High</ComboBoxItem>
@@ -130,50 +125,47 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Button
-    Style="{StaticResource MaterialDesignRaisedDarkButton}"
-    Height="49"
-    materialDesign:ButtonAssist.CornerRadius="25"
-    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
-                    <TextBlock
-      Text="Spustit Kalibraci" />
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Height="49"
+                        materialDesign:ButtonAssist.CornerRadius="25"
+                        ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                    <TextBlock Text="Spustit Kalibraci" />
                 </Button>
             </StackPanel>
-            <StackPanel HorizontalAlignment="Right" Height="440"  VerticalAlignment="Top" Width="397">
-                <wpf:CartesianChart x:Name="Graph" Series="{Binding Series}" LegendLocation="None" Margin="10,0,0,0" Height="200" HorizontalAlignment="Left" Width="377" RenderTransformOrigin="0.364,0.646" DisableAnimations="True"  >
+            <StackPanel HorizontalAlignment="Right" Height="440" VerticalAlignment="Top" Width="397">
+                <wpf:CartesianChart x:Name="Graph" Series="{Binding Series}" LegendLocation="None" Margin="10,0,0,0" Height="200"
+                                    HorizontalAlignment="Left" Width="377" RenderTransformOrigin="0.364,0.646" DisableAnimations="True">
                     <wpf:CartesianChart.AxisX>
-                        <wpf:Axis x:Name="X" Title="Volts" LabelFormatter="{Binding XFormatter}" MinValue="-12" MaxValue="24"/>
+                        <wpf:Axis x:Name="X" Title="Volts" LabelFormatter="{Binding XFormatter}" MinValue="-12" MaxValue="24" />
                     </wpf:CartesianChart.AxisX>
                     <wpf:CartesianChart.AxisY>
                         <wpf:Axis x:Name="Y" Title="Points/Volts" LabelFormatter="{Binding YFormatter}" MinValue="0" MaxValue="55" />
                     </wpf:CartesianChart.AxisY>
                 </wpf:CartesianChart>
-                <Label Content="Exponent" HorizontalAlignment="Right"></Label>
+                <Label Content="Exponent" HorizontalAlignment="Right" />
                 <mah:NumericUpDown Minimum="0"
-                   Maximum="1"
-                   Interval="0.1"
-                   Value="{Binding Exp}"
-                   HorizontalAlignment="Right" Width="77" Height="32" VerticalAlignment="Top">
+                                   Maximum="1"
+                                   Interval="0.1"
+                                   Value="{Binding Exp}"
+                                   HorizontalAlignment="Right" Width="77" Height="32" VerticalAlignment="Top">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding ExpChanged}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </mah:NumericUpDown>
-                <Label Content="Počet měření" HorizontalAlignment="Right"></Label>
+                <Label Content="Počet měření" HorizontalAlignment="Right" />
                 <mah:NumericUpDown Minimum="0"
-                   Maximum="50"
-                   Interval="1"
-                   Value="{Binding Lines}"
-                   HorizontalAlignment="Right" Width="77" Height="32" VerticalAlignment="Top">
-
-                </mah:NumericUpDown>
-                <Label Content="Nulový bod" HorizontalAlignment="Right"></Label>
+                                   Maximum="50"
+                                   Interval="1"
+                                   Value="{Binding Lines}"
+                                   HorizontalAlignment="Right" Width="77" Height="32" VerticalAlignment="Top" />
+                <Label Content="Nulový bod" HorizontalAlignment="Right" />
                 <mah:NumericUpDown Minimum="-12"
-                   Maximum="24"
-                   Interval="1"
-                   Value="{Binding NullPoint}"
-                   HorizontalAlignment="Right" Width="77" Height="32" VerticalAlignment="Top">
+                                   Maximum="24"
+                                   Interval="1"
+                                   Value="{Binding NullPoint}"
+                                   HorizontalAlignment="Right" Width="77" Height="32" VerticalAlignment="Top">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
                             <i:InvokeCommandAction Command="{Binding NullPointChanged}" />
@@ -181,15 +173,12 @@
                     </i:Interaction.Triggers>
                 </mah:NumericUpDown>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label Content="Režim Báze" Height="47" VerticalContentAlignment="Center" HorizontalAlignment="Right"></Label>
-                    <GridSplitter Width="10" Opacity="0" Visibility="Hidden"></GridSplitter>
-                    <ToggleButton
-                        IsChecked="{Binding Mode}"
-                        Style="{StaticResource MaterialDesignActionToggleButton}"
-                        ToolTip="MaterialDesignActionLightToggleButton"
-                        HorizontalAlignment="Right"
-                        
-                        >
+                    <Label Content="Režim Báze" Height="47" VerticalContentAlignment="Center" HorizontalAlignment="Right" />
+                    <GridSplitter Width="10" Opacity="0" Visibility="Hidden" />
+                    <ToggleButton IsChecked="{Binding Mode}"
+                                  Style="{StaticResource MaterialDesignActionToggleButton}"
+                                  ToolTip="MaterialDesignActionLightToggleButton"
+                                  HorizontalAlignment="Right">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{Binding ModeChanged}" />
@@ -197,7 +186,6 @@
                         </i:Interaction.Triggers>
                         <materialDesign:ToggleButtonAssist.OnContent>I</materialDesign:ToggleButtonAssist.OnContent> U
                     </ToggleButton>
-
                 </StackPanel>
             </StackPanel>
         </StackPanel>

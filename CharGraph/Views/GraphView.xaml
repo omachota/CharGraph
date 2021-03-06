@@ -30,10 +30,13 @@
         <!-- </DataGrid> -->
         <StackPanel VerticalAlignment="Bottom" Height="100">
 
-            <Button Command="{Binding Start}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="27" Margin="119,0" Style="{StaticResource MaterialDesignRaisedButton}">Start</Button>
+            <Button Command="{Binding Start}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="27" Margin="119,0"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                Start
+            </Button>
             <Button Click="ToogleZoomingMode" Style="{StaticResource MaterialDesignRaisedButton}">
                 <TextBlock>
-                    Mód přiblížení: 
+                    Mód přiblížení:
                     <TextBlock Text="{Binding ZoomingMode, Converter={StaticResource ZoomingModeCoverter}}" />
                 </TextBlock>
             </Button>
@@ -41,5 +44,5 @@
         </StackPanel>
 
     </Grid>
-    
+
 </UserControl>
