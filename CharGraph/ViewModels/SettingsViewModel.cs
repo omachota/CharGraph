@@ -14,6 +14,7 @@ namespace CharGraph.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
+
         private int _min1 = -12, _min2 = -12, _max1 = 24, _max2 = 24, _lines = 5, _resolution, _nullpoint, _minimum = -12, _maximum = 24;
         private bool _mode;
         private double _exp, _tick = 1;
@@ -255,9 +256,10 @@ namespace CharGraph.ViewModels
 
             Series.Clear();
             LineSeries line = new LineSeries();
-            line.Title = "positive";
+            line.Title = "P";
             line.PointGeometrySize = 0;
             line.Fill = Brushes.Transparent;
+            line.Stroke =new SolidColorBrush(Color.FromRgb(0xc6,0xff,0x00));
             ChartValues<ObservablePoint> chart = new ChartValues<ObservablePoint>();
             for (int i = 0; i < 30; i++)
             {
@@ -272,9 +274,10 @@ namespace CharGraph.ViewModels
             Series.Add(line);
 
             LineSeries line2 = new LineSeries();
-            line2.Title = "negative";
+            line2.Title = "N";
             line2.PointGeometrySize = 0;
             line2.Fill = Brushes.Transparent;
+            line2.Stroke = new SolidColorBrush(Color.FromRgb(0xc6, 0xff, 0x00));
             ChartValues<ObservablePoint> chart2 = new ChartValues<ObservablePoint>();
             for (int i = 0; i < 30; i++)
             {

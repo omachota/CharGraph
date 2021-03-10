@@ -68,17 +68,21 @@ void loop()
     {
       fuse2 = s.substring(5).toInt();
     }
+    else if (s.startsWith("Vcal"))
+    {
+      Vcal();
+    }
 
   }
   delay(100);
 }
 void mereni() {
 
-  for (float i = min2; i <= max2; i += 0.5 ) {
+  for (double i = min2; i <= max2; i += 0.5 ) {
     volt(min1, i);
     delay(20);
-    float current2 = ina2.readShuntCurrent(true) * 1000;
-    float voltage = ina2.readBusVoltage() - 11.4;
+    double current2 = ina2.readShuntCurrent(true) * 1000;
+    double voltage = ina2.readBusVoltage() - 11.4;
     if (voltage != gate_old) {
       gate_old = voltage;
       Serial.print("new line |");
@@ -88,13 +92,13 @@ void mereni() {
       //Serial.print(voltage, 5);
       //Serial.println("V");
 
-      for (float j = min1; j <= max1; j += (float)(max1 - min1) / 25.00) {
+      for (double j = min1; j <= max1; j += (double)(max1 - min1) / 25.00) {
         volt(j, i);
         if (j == min1) delay(50);
         delay(20);
         //measure();
-        float current1 = ina.readShuntCurrent(true);
-        float voltage2 = ina.readBusVoltage() - 11.4;
+        double current1 = ina.readShuntCurrent(true);
+        double voltage2 = ina.readBusVoltage() - 11.4;
         if (voltage2 != drain_old) {
           drain_old = voltage2;
 
@@ -116,4 +120,69 @@ void volt(float voltage1, float voltage2) {
   voltage2 = map(voltage2, -12.00, 24.00, 0, 4095);
   dac.setVoltage(voltage1, false);
   dac2.setVoltage(voltage2, false);
+}
+
+
+void Vcal() {
+  Serial.println("Vcal Started");
+  int val = 1200;
+  int val_old;
+  double current_old = -1000;
+  double tmp;
+  while (true) {
+    dac.setVoltage(val,false);
+    delay(20);
+    tmp = ina.readShuntCurrent(true);
+    Serial.println(tmp,5);
+    if (tmp == 0 || (current_old > 0 && tmp < 0) || (current_old < 0 && tmp > 0)) {
+      if (abs(tmp) < abs(current_old)){
+          PrintCal(0, val);
+      }
+      else{
+            PrintCal(0, val_old);
+      }
+      break;
+      }
+  else if (tmp > 0 && current_old > 0) {
+      val_old = val;
+      val--;
+    }
+
+    else if (tmp < 0 && current_old < 0) {
+      val_old = val;
+      val++;
+    }
+    current_old = tmp;
+  }
+
+  
+
+
+
+
+
+
+
+  
+}
+
+
+void PrintCal(int napeti, int kroky) {
+  Serial.print("Vcal pro V: ");
+  Serial.print(napeti);
+  Serial.print(" nalezeno na: ");
+  Serial.println(kroky);
+
+
+
+}
+bool alert(float cur1, float cur2)
+{
+  if (abs(cur1) > fuse1 || abs(cur2) > fuse2) {
+
+    volt(0, 0);
+    return true;
+  }
+  return false;
+
 }
