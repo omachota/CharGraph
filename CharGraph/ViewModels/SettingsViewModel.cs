@@ -9,288 +9,238 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.Defaults;
 using System.Windows.Media;
+using CharGraph.Models;
 
 namespace CharGraph.ViewModels
 {
-    public class SettingsViewModel : BaseViewModel
-    {
+	public class SettingsViewModel : BaseViewModel
+	{
+		private int _minimum = -12, _maximum = 24;
+		private double _tick = 1;
+		private bool _isArduinoDialogOpen;
+		private readonly INavigator _navigator;
+		private readonly ArduinoDetector _arduinoDetector;
+		private string _bazemin, _bazemax;
+		public Func<double, string> XFormatter { get; set; }
+		public Func<double, string> YFormatter { get; set; }
 
-        private int _min1 = -12, _min2 = -12, _max1 = 24, _max2 = 24, _lines = 5, _resolution, _nullpoint, _minimum = -12, _maximum = 24;
-        private bool _mode;
-        private double _exp, _tick = 1;
-        private int _fuse1Index, _fuse2Index;
-        private bool _isArduinoDialogOpen;
-        private readonly INavigator _navigator;
-        private readonly ArduinoDetector _arduinoDetector;
-        private string _bazemin, _bazemax;
-        public Func<double, string> XFormatter { get; set; }
-        public Func<double, string> YFormatter { get; set; }
+		public ICommand AcceptArduinoDialogCommand { get; }
+		public ICommand CancelArduinoDialogCommand { get; }
+		public ICommand Min1ValueChanged { get; }
+		public ICommand Min2ValueChanged { get; }
+		public ICommand Max1ValueChanged { get; }
+		public ICommand Max2ValueChanged { get; }
+		public ICommand Fuse1Changed { get; }
+		public ICommand Fuse2Changed { get; }
+		public ICommand ExpChanged { get; }
+		public ICommand NullPointChanged { get; }
+		public ICommand ResolutionChanged { get; }
+		public ICommand ModeChanged { get; }
 
-        public ICommand AcceptArduinoDialogCommand { get; }
-        public ICommand CancelArduinoDialogCommand { get; }
-        public ICommand Min1ValueChanged { get; }
-        public ICommand Min2ValueChanged { get; }
-        public ICommand Max1ValueChanged { get; }
-        public ICommand Max2ValueChanged { get; }
-        public ICommand Fuse1Changed { get; }
-        public ICommand Fuse2Changed { get; }
-        public ICommand ExpChanged { get; }
-        public ICommand NullPointChanged { get; }
-        public ICommand ResolutionChanged { get; }
-        public ICommand ModeChanged { get; }
+		public SeriesCollection Series { get; set; } = new();
 
-        public SeriesCollection Series { get; set; } = new SeriesCollection();
-        public SettingsViewModel(INavigator navigator, ArduinoDetector arduinoDetector)
-        {
-            _navigator = navigator;
-            _arduinoDetector = arduinoDetector;
-            AcceptArduinoDialogCommand = new Command(AcceptArduinoDialog);
-            CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
-            Min1ValueChanged = new Command(() => Write($"Min1 {-Min1}"));
-            Min2ValueChanged = new Command<double>(_ => { Write($"Min2 {-Min2}"); Update(); });
-            Max1ValueChanged = new Command(() => Write($"Max1 {Max1}"));
-            Max2ValueChanged = new Command<double>(_ => { Write($"Max2 {Max2}"); Update(); });
-            Fuse1Changed = new Command(() => Write($"Fuse1 {Fuses[Fuse1Index]}"));
-            Fuse2Changed = new Command(() => Write($"Fuse2 {Fuses2[Fuse2Index]}"));
-            ExpChanged = new Command(Draw);
-            NullPointChanged = new Command(Draw);
-            ResolutionChanged = new Command(Draw);
-            ModeChanged = new Command(EventResetMode);
-            ParseSettings();
-            Draw();
-            Update();
-        }
+		public SettingsViewModel(INavigator navigator, ArduinoDetector arduinoDetector)
+		{
+			_navigator = navigator;
+			_arduinoDetector = arduinoDetector;
+			Settings = Extensions.ReadSettings();
+			AcceptArduinoDialogCommand = new Command(AcceptArduinoDialog);
+			CancelArduinoDialogCommand = new Command(() => IsArduinoDialogOpen = false);
+			Min1ValueChanged = new Command(() => Write($"Min1 {-Settings.Min1}"));
+			Min2ValueChanged = new Command<double>(_ =>
+			{
+				Write($"Min2 {-Settings.Min2}");
+				Update();
+			});
+			Max1ValueChanged = new Command(() => Write($"Max1 {Settings.Max1}"));
+			Max2ValueChanged = new Command<double>(_ =>
+			{
+				Write($"Max2 {Settings.Max2}");
+				Update();
+			});
+			Fuse1Changed = new Command(() => Write($"Fuse1 {Fuses[Settings.Fuse1Index]}"));
+			Fuse2Changed = new Command(() => Write($"Fuse2 {Fuses2[Settings.Fuse2Index]}"));
+			ExpChanged = new Command(() =>
+			{
+				Draw();
+				Settings.Save();
+			});
+			NullPointChanged = new Command(() =>
+			{
+				Draw();
+				Settings.Save();
+			});
+			ResolutionChanged = new Command(() =>
+			{
+				Draw();
+				Settings.Save();
+			});
+			ModeChanged = new Command(EventResetMode);
+			Draw();
+			Update();
+		}
 
-        private void Update()
-        {
-            string tmpmin = Min2.ToString();
-            string tmpmax = Max2.ToString();
+		public Settings Settings { get; private set; }
 
-            if (Mode)
-            {
-                tmpmin += " mA";
-                tmpmax += " mA";
-            }
-            else
-            {
-                tmpmin += " V";
-                tmpmax += " V";
-            }
+		private void Update()
+		{
+			string tmpmin = Settings.Min2.ToString();
+			string tmpmax = Settings.Max2.ToString();
 
-            BazeMax = tmpmax;
-            BazeMin = tmpmin;
-        }
+			if (Settings.Mode)
+			{
+				tmpmin += " mA";
+				tmpmax += " mA";
+			}
+			else
+			{
+				tmpmin += " V";
+				tmpmax += " V";
+			}
 
-        private void EventResetMode()
-        {
-            if (!Mode)
-            {
-                Minimum = -10;
-                Maximum = 20;
-                Tick = 1;
-                Min2 /= 12;
-                Max2 /= 12;
-            }
-            else
-            {
-                Minimum = -120;
-                Maximum = 240;
-                Tick = 1;
-                Min2 *= 12;
-                Max2 *= 12;
-            }
+			BazeMax = tmpmax;
+			BazeMin = tmpmin;
+		}
 
-            Update();
-        }
+		private void EventResetMode()
+		{
+			if (!Settings.Mode)
+			{
+				Minimum = -10;
+				Maximum = 20;
+				Tick = 1;
+				Settings.Min2 /= 12;
+				Settings.Max2 /= 12;
+			}
+			else
+			{
+				Minimum = -120;
+				Maximum = 240;
+				Tick = 1;
+				Settings.Min2 *= 12;
+				Settings.Max2 *= 12;
+			}
 
-        private void ParseSettings()
-        {
-            var settings = Extensions.ReadSettings();
-            Min1 = settings.Min1;
-            Min2 = settings.Min2;
-            Max1 = settings.Max1;
-            Max2 = settings.Max2;
-            Fuse1Index = settings.Fuse1;
-            Fuse2Index = settings.Fuse2;
-        }
+			Update();
+		}
 
-        private bool IsArduinoDialogOpen
-        {
-            get => _isArduinoDialogOpen;
-            set => SetAndRaise(ref _isArduinoDialogOpen, value);
-        }
+		private bool IsArduinoDialogOpen
+		{
+			get => _isArduinoDialogOpen;
+			set => SetAndRaise(ref _isArduinoDialogOpen, value);
+		}
 
-        public int Min1
-        {
-            get => _min1;
-            set => SetAndRaise(ref _min1, value);
-        }
+		public int Minimum
+		{
+			get => _minimum;
+			set => SetAndRaise(ref _minimum, value);
+		}
 
-        public int Min2
-        {
-            get => _min2;
-            set => SetAndRaise(ref _min2, value);
-        }
+		public int Maximum
+		{
+			get => _maximum;
+			set => SetAndRaise(ref _maximum, value);
+		}
 
-        public int Max1
-        {
-            get => _max1;
-            set => SetAndRaise(ref _max1, value);
-        }
+		public double Tick
+		{
+			get => _tick;
+			set => SetAndRaise(ref _tick, value);
+		}
 
-        public int Max2
-        {
-            get => _max2;
-            set => SetAndRaise(ref _max2, value);
-        }
+		public string BazeMax
+		{
+			get => _bazemax;
+			set => SetAndRaise(ref _bazemax, value);
+		}
 
-        public int Fuse1Index
-        {
-            get => _fuse1Index;
-            set => SetAndRaise(ref _fuse1Index, value);
-        }
+		public string BazeMin
+		{
+			get => _bazemin;
+			set => SetAndRaise(ref _bazemin, value);
+		}
 
-        public int Fuse2Index
-        {
-            get => _fuse2Index;
-            set => SetAndRaise(ref _fuse2Index, value);
-        }
-        public int Lines
-        {
-            get => _lines;
-            set => SetAndRaise(ref _lines, value);
-        }
-        public int Resolution
-        {
-            get => _resolution;
-            set => SetAndRaise(ref _resolution, value);
-        }
-        public int NullPoint
-        {
-            get => _nullpoint;
-            set => SetAndRaise(ref _nullpoint, value);
-        }
-        public int Minimum
-        {
-            get => _minimum;
-            set => SetAndRaise(ref _minimum, value);
-        }
-        public int Maximum
-        {
-            get => _maximum;
-            set => SetAndRaise(ref _maximum, value);
-        }
-        public bool Mode
-        {
-            get => _mode;
-            set => SetAndRaise(ref _mode, value);
-        }
-        public double Exp
-        {
-            get => _exp;
-            set => SetAndRaise(ref _exp, value);
-        }
-        public double Tick
-        {
-            get => _tick;
-            set => SetAndRaise(ref _tick, value);
-        }
-        public string BazeMax
-        {
-            get => _bazemax;
-            set => SetAndRaise(ref _bazemax, value);
-        }
-        public string BazeMin
-        {
-            get => _bazemin;
-            set => SetAndRaise(ref _bazemin, value);
-        }
-        public List<int> Fuses { get; } = new List<int>() { 100, 250, 500, 1000, 1500 };
-        public List<int> Fuses2 { get; } = new List<int>() { 20, 50, 100, 200, 300 };
+		public List<int> Fuses { get; } = new() {100, 250, 500, 1000, 1500};
+		public List<int> Fuses2 { get; } = new() {20, 50, 100, 200, 300};
 
-        private void AcceptArduinoDialog()
-        {
-            IsArduinoDialogOpen = false;
-            Task.Delay(TimeSpan.FromSeconds(0.5)).ContinueWith(_ => _navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main),
-                TaskScheduler.FromCurrentSynchronizationContext());
-        }
+		private void AcceptArduinoDialog()
+		{
+			IsArduinoDialogOpen = false;
+			Task.Delay(TimeSpan.FromSeconds(0.5)).ContinueWith(_ => _navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Main),
+				TaskScheduler.FromCurrentSynchronizationContext());
+		}
 
-        public async Task Initialize(CancellationTokenSource cts)
-        {
-            await Task.Run(async () =>
-            {
-                _arduinoDetector.InitializeArduino = true;
-                while (_arduinoDetector.Arduino == null && !cts.IsCancellationRequested)
-                {
-                    await Task.Delay(2000);
-                }
-            }, cts.Token);
-        }
+		public async Task Initialize(CancellationTokenSource cts)
+		{
+			await Task.Run(async () =>
+			{
+				_arduinoDetector.InitializeArduino = true;
+				while (_arduinoDetector.Arduino == null && !cts.IsCancellationRequested)
+				{
+					await Task.Delay(2000);
+				}
+			}, cts.Token);
+		}
 
-        private void Write(string text)
-        {
-            if (_arduinoDetector.Arduino != null)
-            {
-                _arduinoDetector.Arduino.Write(text);
-                Thread.Sleep(25);
-            }
+		private void Write(string text)
+		{
+			if (_arduinoDetector.Arduino != null)
+			{
+				_arduinoDetector.Arduino.Write(text);
+				Thread.Sleep(25);
+			}
 
-            Extensions.SaveSettings(_min1, _min2, _max1, _max2, _fuse1Index, _fuse2Index);
-        }
+			Settings.Save();
+		}
 
-        private void Draw()
-        {
-            int multiplier = 10;
-            switch (Resolution)
-            {
-                case 0:
-                    multiplier = 10;
-                    break;
-                case 1:
-                    multiplier = 25;
-                    break;
-                case 2:
-                    multiplier = 50;
-                    break;
-            }
+		private void Draw()
+		{
+			int multiplier = Settings.Resolution switch
+			{
+				0 => 10,
+				1 => 25,
+				2 => 50,
+				_ => 10
+			};
 
-            Series.Clear();
-            LineSeries line = new LineSeries();
-            line.Title = "P";
-            line.PointGeometrySize = 0;
-            line.Fill = Brushes.Transparent;
-            line.Stroke =new SolidColorBrush(Color.FromRgb(0xc6,0xff,0x00));
-            ChartValues<ObservablePoint> chart = new ChartValues<ObservablePoint>();
-            for (int i = 0; i < 30; i++)
-            {
-                double y = multiplier * Math.Pow(1.00 / (1 + i), Exp);
-                if (i + NullPoint <= 20)
-                {
-                    ObservablePoint point = new ObservablePoint(i + NullPoint, y);
-                    chart.Add(point);
-                }
-            }
-            line.Values = chart;
-            Series.Add(line);
+			Series.Clear();
+			LineSeries line = new LineSeries();
+			line.Title = "P";
+			line.PointGeometrySize = 0;
+			line.Fill = Brushes.Transparent;
+			line.Stroke = new SolidColorBrush(Color.FromRgb(0xc6, 0xff, 0x00));
+			ChartValues<ObservablePoint> chart = new ChartValues<ObservablePoint>();
+			for (int i = 0; i < 30; i++)
+			{
+				double y = multiplier * Math.Pow(1.00 / (1 + i), Settings.Exp);
+				if (i + Settings.NullPoint <= 20)
+				{
+					ObservablePoint point = new ObservablePoint(i + Settings.NullPoint, y);
+					chart.Add(point);
+				}
+			}
 
-            LineSeries line2 = new LineSeries();
-            line2.Title = "N";
-            line2.PointGeometrySize = 0;
-            line2.Fill = Brushes.Transparent;
-            line2.Stroke = new SolidColorBrush(Color.FromRgb(0xc6, 0xff, 0x00));
-            ChartValues<ObservablePoint> chart2 = new ChartValues<ObservablePoint>();
-            for (int i = 0; i < 30; i++)
-            {
-                double y = multiplier * Math.Pow(1.00 / (1 + i), Exp);
-                if (-i + NullPoint >= -10)
-                {
-                    ObservablePoint point = new ObservablePoint(-i + NullPoint, y);
-                    chart2.Add(point);
-                }
-            }
-            line2.Values = chart2;
-            Series.Add(line2);
-        }
+			line.Values = chart;
+			Series.Add(line);
 
-    }
+			LineSeries line2 = new LineSeries();
+			line2.Title = "N";
+			line2.PointGeometrySize = 0;
+			line2.Fill = Brushes.Transparent;
+			line2.Stroke = new SolidColorBrush(Color.FromRgb(0xc6, 0xff, 0x00));
+			ChartValues<ObservablePoint> chart2 = new ChartValues<ObservablePoint>();
+			for (int i = 0; i < 30; i++)
+			{
+				double y = multiplier * Math.Pow(1.00 / (1 + i), Settings.Exp);
+				if (-i + Settings.NullPoint >= -10)
+				{
+					ObservablePoint point = new ObservablePoint(-i + Settings.NullPoint, y);
+					chart2.Add(point);
+				}
+			}
+
+			line2.Values = chart2;
+			Series.Add(line2);
+		}
+	}
 }

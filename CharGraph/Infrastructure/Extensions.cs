@@ -6,22 +6,9 @@ namespace CharGraph.Infrastructure
 {
 	public static class Extensions
 	{
-		public static readonly string Directory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\JakubProchazka\CharGraph";
+		public static readonly string Directory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CharGraph";
 
 		public static readonly string FilePath = Directory + @"\settings.txt";
-
-		public static void SaveSettings(int min1, int min2, int max1, int max2, int fuse1, int fuse2)
-		{
-			using (var sw = new StreamWriter(FilePath))
-			{
-				sw.WriteLine("min1=" + min1);
-				sw.WriteLine("min2=" + min2);
-				sw.WriteLine("max1=" + max1);
-				sw.WriteLine("max2=" + max2);
-				sw.WriteLine("fuse1=" + fuse1);
-				sw.WriteLine("fuse2=" + fuse2);
-			}
-		}
 
 		public static Settings ReadSettings()
 		{
@@ -48,10 +35,25 @@ namespace CharGraph.Infrastructure
 							settings.Max2 = int.Parse(splittedLine[1]);
 							break;
 						case "fuse1":
-							settings.Fuse1 = int.Parse(splittedLine[1]);
+							settings.Fuse1Index = int.Parse(splittedLine[1]);
 							break;
 						case "fuse2":
-							settings.Fuse2 = int.Parse(splittedLine[1]);
+							settings.Fuse2Index = int.Parse(splittedLine[1]);
+							break;
+						case "resolution":
+							settings.Resolution = int.Parse(splittedLine[1]);
+							break;
+						case "exp":
+							settings.Exp = double.Parse(splittedLine[1]);
+							break;
+						case "nullPoint":
+							settings.NullPoint = int.Parse(splittedLine[1]);
+							break;
+						case "lines":
+							settings.Lines = int.Parse(splittedLine[1]);
+							break;
+						case "mode":
+							settings.Mode = bool.Parse(splittedLine[1]);
 							break;
 					}
 				}
