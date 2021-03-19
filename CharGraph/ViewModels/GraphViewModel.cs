@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -20,11 +21,13 @@ namespace CharGraph.ViewModels
 		private List<ArduData> DataList { get; set; } = new List<ArduData>();
 		public Command Start { get; }
 
+		public Command Export { get; }
 		public GraphViewModel(ArduinoDetector arduinoDetector)
 		{
 			_arduinoDetector = arduinoDetector;
 			Start = new Command(OnStart);
 			ZoomingMode = ZoomingOptions.Y;
+			Export = new Command(ExportCsv);
 		}
 
 		public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
@@ -35,6 +38,32 @@ namespace CharGraph.ViewModels
 			set => SetAndRaise(ref _zoomingMode, value);
 		}
 
+		private void ExportCsv()
+		{
+			Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+			string s = "CharGraph-" + DateTime.Today.ToString("d");
+			s = s.Replace(' ','-');
+			s = s.Replace(':', '-');
+			s = s.Replace('.', '-');
+			dlg.FileName = s;
+			dlg.DefaultExt = ".csv";
+			dlg.Filter = "Csv file | *.csv";
+			
+			bool? result = dlg.ShowDialog();
+
+
+			if (result == true)
+			{
+				// Save document
+				string filename = dlg.FileName;
+				if (DataList.Count > 0)
+					Extensions.ExportCsv(DataList, filename);
+				else
+					MessageBox.Show("Žádná Data!");
+			}
+			
+			
+		}
 		private void OnStart()
 		{
 			if (_arduinoDetector.Arduino != null)

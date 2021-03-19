@@ -28,12 +28,23 @@
         <!--           Margin="0,0,0,0" -->
         <!--           VerticalAlignment="Top"> -->
         <!-- </DataGrid> -->
-        <StackPanel VerticalAlignment="Bottom" Height="100">
+        <StackPanel VerticalAlignment="Bottom" Height="100" HorizontalAlignment="Stretch">
+            <Grid HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Command="{Binding Start}" Height="27" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Width="Auto" Margin="0,0,0,0" Grid.Column="0">
+                    <TextBlock> Start</TextBlock>
 
-            <Button Command="{Binding Start}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="27" Margin="119,0"
-                    Style="{StaticResource MaterialDesignRaisedButton}">
-                Start
-            </Button>
+                </Button>
+                <GridSplitter Width="1"></GridSplitter>
+                <Button  Height="27" Style="{StaticResource MaterialDesignRaisedButton}" Width="Auto" Grid.Column="2"  Margin="0,0,0,0" Command="{Binding Export}" >
+                    <TextBlock> Export</TextBlock>
+                </Button>
+            </Grid>
             <Button Click="ToogleZoomingMode" Style="{StaticResource MaterialDesignRaisedButton}">
                 <TextBlock>
                     Mód přiblížení:

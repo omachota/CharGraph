@@ -1,14 +1,20 @@
 #include <Wire.h>
 #include <INA226.h>
 #include <Adafruit_MCP4725.h>
-
+#include "EPROMAnything.h"
+#define MY_OTA_FIRMWARE_FEATURE 
 INA226 ina;
 INA226 ina2;
 Adafruit_MCP4725 dac;
 Adafruit_MCP4725 dac2;
 float gate_old = -200;
 float drain_old = -200;
-
+uint16_t zero1;
+uint16_t negative1;
+uint16_t positive1;
+uint16_t zero2;
+uint16_t negative2;
+uint16_t positive2;
 //    case INA226_MODE_POWER_DOWN:      //    case INA226_MODE_SHUNT_TRIG:      //    case INA226_MODE_BUS_TRIG:        //    case INA226_MODE_SHUNT_BUS_TRIG:  //    case INA226_MODE_ADC_OFF:         //    case INA226_MODE_SHUNT_CONT:      //    case INA226_MODE_BUS_CONT:        //    case INA226_MODE_SHUNT_BUS_CONT:
 
 //    case INA226_AVERAGES_1:           //    case INA226_AVERAGES_4:           //    case INA226_AVERAGES_16:          //    case INA226_AVERAGES_64:          //    case INA226_AVERAGES_128:         //    case INA226_AVERAGES_256:         //    case INA226_AVERAGES_512:         //    case INA226_AVERAGES_1024:
@@ -34,7 +40,13 @@ void setup()
   dac.begin(0x61);
   dac2.begin(0x60);
 
-
+  //read calibration from eeprom
+  EEPROM_readAnything(0,zero1);
+  EEPROM_readAnything(3,negative1);
+  EEPROM_readAnything(6,positive1);
+  EEPROM_readAnything(9,zero2);
+  EEPROM_readAnything(12,negative2);
+  EEPROM_readAnything(15,positive2);
 }
 
 void loop()
@@ -125,7 +137,7 @@ void volt(float voltage1, float voltage2) {
 
 void Vcal() {
   Serial.println("Vcal Started");
-  int val = 1200;
+  int val = 1000;
   int val_old;
   double current_old = -1000;
   double tmp;
@@ -137,9 +149,11 @@ void Vcal() {
     if (tmp == 0 || (current_old > 0 && tmp < 0) || (current_old < 0 && tmp > 0)) {
       if (abs(tmp) < abs(current_old)){
           PrintCal(0, val);
+          zero1 = val;
       }
       else{
             PrintCal(0, val_old);
+            zero1 = val_old;
       }
       break;
       }
@@ -155,17 +169,51 @@ void Vcal() {
     current_old = tmp;
   }
 
-  
+  int ground = ina.readBusVoltage(true);
+  val = 0;
+ val_old =0;
+ current_old = 0;
+   while (true) {
+    dac.setVoltage(val,false);
+    delay(20);
+    tmp = ina.readBusVoltage(true);
+    Serial.println(tmp,5);
+    if (tmp == ground-10 || (current_old > ground-10 && tmp < ground-10) || (current_old < ground-10 && tmp > ground-10)) {
+      if (abs(tmp) < abs(current_old)){
+          PrintCal(-10, val);
+          zero1 = val;
+      }
+      else{
+            PrintCal(-10, val_old);
+            zero1 = val_old;
+      }
+      break;
+      }
+  else if (tmp > ground-10 && current_old > ground-10) {
+      val_old = val;
+      val--;
+    }
 
-
-
+    else if (tmp < ground-10 && current_old < ground-10) {
+      val_old = val;
+      val++;
+    }
+    current_old = tmp;
+  }
 
 
 
 
   
 }
-
+void Save(){
+  EEPROM_writeAnything(0,zero1);
+  EEPROM_writeAnything(3,negative1);
+  EEPROM_writeAnything(6,positive1);
+  EEPROM_writeAnything(9,zero2);
+  EEPROM_writeAnything(12,negative2);
+  EEPROM_writeAnything(15,positive2);
+}
 
 void PrintCal(int napeti, int kroky) {
   Serial.print("Vcal pro V: ");
