@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -48,9 +47,8 @@ namespace CharGraph.ViewModels
 			dlg.FileName = s;
 			dlg.DefaultExt = ".csv";
 			dlg.Filter = "Csv file | *.csv";
-			
-			bool? result = dlg.ShowDialog();
 
+			bool? result = dlg.ShowDialog();
 
 			if (result == true)
 			{
@@ -61,8 +59,7 @@ namespace CharGraph.ViewModels
 				else
 					MessageBox.Show("Žádná Data!");
 			}
-			
-			
+
 		}
 		private void OnStart()
 		{

@@ -47,7 +47,7 @@ namespace CharGraph.Infrastructure.SwitchView
 
 		private void Settings()
 		{
-			var settingsViewModel = new SettingsViewModel(_navigator, _arduinoDetector);
+			var settingsViewModel = new SettingsViewModel(_arduinoDetector);
 			_navigator.CurrentViewModel = settingsViewModel;
 			if (_showArduinoDetectedDialog)
 			{

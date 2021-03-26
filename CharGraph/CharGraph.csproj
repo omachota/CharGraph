@@ -102,19 +102,21 @@
     <Compile Include="Infrastructure\ArduinoDetector.cs" />
     <Compile Include="Infrastructure\Command.cs" />
     <Compile Include="Infrastructure\Extensions.cs" />
+    <Compile Include="Infrastructure\InvertedBoolToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\SwitchView\INavigator.cs" />
     <Compile Include="Infrastructure\SwitchView\Navigator.cs" />
     <Compile Include="Infrastructure\SwitchView\UpdateCurrentViewModelCommand.cs" />
     <Compile Include="Infrastructure\ThemeSwitcher.cs" />
     <Compile Include="Models\ArduData.cs" />
     <Compile Include="Models\Arduino.cs" />
+    <Compile Include="Models\CalibrationData.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GraphViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="Views\ArduinoDetectedDialog.xaml.cs">
-      <DependentUpon>ArduinoDetectedDialog.xaml</DependentUpon>
+    <Compile Include="Views\CalibrationDialog.xaml.cs">
+      <DependentUpon>CalibrationDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GraphView.xaml.cs">
       <DependentUpon>GraphView.xaml</DependentUpon>
@@ -138,7 +140,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ArduinoDetectedDialog.xaml" />
+    <Page Include="Views\CalibrationDialog.xaml" />
     <Page Include="Views\GraphView.xaml" />
     <Page Include="Views\SettingsView.xaml" />
   </ItemGroup>

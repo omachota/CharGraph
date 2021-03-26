@@ -49,6 +49,10 @@ namespace CharGraph.Models
 			{
 				data = SerialPort.ReadLine();
 			}
+			catch (ArgumentOutOfRangeException exception)
+			{
+				Debug.WriteLine(exception + "!!!");
+			}
 			catch (Exception exception)
 			{
 				Debug.WriteLine(exception);

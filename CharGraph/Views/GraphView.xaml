@@ -21,27 +21,20 @@
                 <wpf:Axis Name="Y" Title="Amps" LabelFormatter="{Binding YFormatter}" />
             </wpf:CartesianChart.AxisY>
         </wpf:CartesianChart>
-
-        <!-- <DataGrid x:Name="dataGrid" -->
-        <!--           ItemsSource="{Binding DataList}" -->
-        <!--           HorizontalAlignment="Left" -->
-        <!--           Margin="0,0,0,0" -->
-        <!--           VerticalAlignment="Top"> -->
-        <!-- </DataGrid> -->
         <StackPanel VerticalAlignment="Bottom" Height="100" HorizontalAlignment="Stretch">
-            <Grid HorizontalAlignment="Stretch" >
+            <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="1" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Command="{Binding Start}" Height="27" 
-                    Style="{StaticResource MaterialDesignRaisedButton}" Width="Auto" Margin="0,0,0,0" Grid.Column="0">
+                <Button Command="{Binding Start}" Height="27"
+                        Style="{StaticResource MaterialDesignRaisedButton}" Width="Auto" Margin="0,0,0,0" Grid.Column="0">
                     <TextBlock> Start</TextBlock>
-
                 </Button>
-                <GridSplitter Width="1"></GridSplitter>
-                <Button  Height="27" Style="{StaticResource MaterialDesignRaisedButton}" Width="Auto" Grid.Column="2"  Margin="0,0,0,0" Command="{Binding Export}" >
+                <GridSplitter Grid.Column="0" Width="1" />
+                <Button Height="27" Style="{StaticResource MaterialDesignRaisedButton}" Width="Auto" Grid.Column="2" Margin="0,0,0,0"
+                        Command="{Binding Export}">
                     <TextBlock> Export</TextBlock>
                 </Button>
             </Grid>
@@ -53,7 +46,5 @@
             </Button>
             <Button Click="ResetZoomOnClick" Style="{StaticResource MaterialDesignRaisedButton}">Reset Přiblížení</Button>
         </StackPanel>
-
     </Grid>
-
 </UserControl>

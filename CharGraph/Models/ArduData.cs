@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace CharGraph.Models
+﻿namespace CharGraph.Models
 {
     public class ArduData
     {
-        
+
         public string Title { get; set; }
 
         public double X { get; set; }
@@ -16,8 +14,8 @@ namespace CharGraph.Models
             Title = title;
             line = line.Replace('.', ','); // TODO : handle this with CultureInfo
             var splitedLine = line.Split(';');
-            X = Double.Parse(splitedLine[0]);
-            Y = Double.Parse(splitedLine[1])*1000;
+            X = double.Parse(splitedLine[0]);
+            Y = double.Parse(splitedLine[1])*1000;
         }
 
         public override string ToString()
