@@ -137,7 +137,7 @@ void volt(float voltage1, float voltage2) {
 
 void Vcal() {
   Serial.println("Vcal Started");
-  int val = 1000;
+  int val = 900;
   int val_old;
   double current_old = -1000;
   double tmp;
@@ -169,32 +169,39 @@ void Vcal() {
     current_old = tmp;
   }
 
-  int ground = ina.readBusVoltage(true);
+  double ground = ina.readBusVoltage(true);
+  Serial.print("Ground on: ");
+  Serial.println(ground,5);
   val = 0;
  val_old =0;
  current_old = 0;
+ dac.setVoltage(val,true);
+ delay(3000);
    while (true) {
-    dac.setVoltage(val,false);
+    dac.setVoltage(val,true);
     delay(20);
     tmp = ina.readBusVoltage(true);
+    Serial.print("testing ");
+    Serial.print(val);
+    Serial.println("  Result: ");
     Serial.println(tmp,5);
-    if (tmp == ground-10 || (current_old > ground-10 && tmp < ground-10) || (current_old < ground-10 && tmp > ground-10)) {
+    if (tmp == ground-8 || (current_old > ground-8 && tmp < ground-8) || (current_old < ground-8 && tmp > ground-8)) {
       if (abs(tmp) < abs(current_old)){
-          PrintCal(-10, val);
+          PrintCal(-8, val);
           zero1 = val;
       }
       else{
-            PrintCal(-10, val_old);
+            PrintCal(-8, val_old);
             zero1 = val_old;
       }
       break;
       }
-  else if (tmp > ground-10 && current_old > ground-10) {
+  else if (tmp > ground-8 && current_old > ground-8) {
       val_old = val;
       val--;
     }
 
-    else if (tmp < ground-10 && current_old < ground-10) {
+    else if (tmp < ground-8 && current_old < ground-8) {
       val_old = val;
       val++;
     }
